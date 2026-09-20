@@ -466,7 +466,7 @@ html[data-tema="chiaro"] .gr:nth-child(even){background:rgba(0,0,0,.025)}
     <div id="l-soldi"></div>
     <div class="nota">Quando incassi, tocca <b>Segna pagato</b> accanto al cliente: si apre WhatsApp col
       messaggio gi&agrave; scritto, tu mandi e basta. Oppure scrivi al tuo assistente
-      <code>PAGATO</code> e il nome. A rate: <code>RATE</code>, il nome e quante (es. <code>RATE Marco 3</code>).
+      <code>PAGATO</code> e il nome. A rate: <code>RATE</code>, il nome e quante (<code>RATE Marco 3</code>) o le cifre (<code>RATE Marco 300 100</code>).
       Le rate in scadenza gliele ricordo io, tre giorni prima.</div>
   </section>
 
@@ -512,7 +512,8 @@ html[data-tema="chiaro"] .gr:nth-child(even){background:rgba(0,0,0,.025)}
         Se ha pagato una cifra diversa: <code>PAGATO Marco 150</code>.</span></div></div>
       <div class="gr solo"><div><b>A rate</b>
         <span><code>RATE Marco 3</code> divide quello che resta in tre rate mensili; con una data,
-        <code>RATE Marco 3 15/10</code>, la prima scade quel giorno. Tre giorni prima di ogni
+        <code>RATE Marco 3 15/10</code>, la prima scade quel giorno. Se le rate hanno cifre diverse
+        le scrivi tu: <code>RATE Marco 300 100 100</code> (devono fare quello che resta). Tre giorni prima di ogni
         rata scrivo io al cliente per ricordargliela; se non paga, un promemoria il giorno dopo,
         poi uno a settimana, mai pi&ugrave; di tre.</span></div></div>
       <div class="gr solo"><div><b>Quanto ti deve</b>
@@ -689,7 +690,770 @@ html[data-tema="chiaro"] .gr:nth-child(even){background:rgba(0,0,0,.025)}
     Soldi</button>
 </nav>
 
-<script id="zp-dati" type="application/json">__DATI__</script>
+<script id="zp-dati" type="application/json">
+{
+ "pt": {
+  "nome": "Marco",
+  "numero_assistente": "+39 388 425 8457",
+  "piano": "PRO",
+  "aggiornato": "17 settembre alle 22:15",
+  "aggiornato_iso": "2026-09-17T22:15:04.000+02:00"
+ },
+ "stasera": [
+  [
+   "promemoria",
+   6
+  ],
+  [
+   "lezioni contate",
+   7
+  ],
+  [
+   "richieste di feedback",
+   4
+  ],
+  [
+   "risposte dei clienti",
+   5
+  ],
+  [
+   "proposte di orario",
+   1
+  ]
+ ],
+ "da_fare": [
+  [
+   "ALTA",
+   "LUCA FERRARI",
+   "+393001000104",
+   "Pacchetto finito",
+   "Ha completato tutte le 10 lezioni. \nSe rinnova scrivi al tuo assistente MENU, Gestisci un cliente, e aggiungi le lezioni nuove.\nFinché non lo fai continuo a contargliele e le vedi andare sotto zero.",
+   "RINNOVA +393001000104 10"
+  ],
+  [
+   "ALTA",
+   "SARA CONTI",
+   "+393001000103",
+   "Lo stai allenando oltre il pacchetto",
+   "1 lezioni oltre le 10 pagate, e sul calendario le vedi rosa. \nSe ha già rinnovato scrivi al tuo assistente MENU, Gestisci un cliente, e aggiungi le lezioni nuove.",
+   "RINNOVA +393001000103 10"
+  ],
+  [
+   "ALTA",
+   "ELENA MORETTI",
+   "+393001000107",
+   "Manca il consenso: non riceve nessun messaggio",
+   "Finché non ce l'hai non gli mando niente, nemmeno i promemoria. Chiediglielo a voce o con un messaggio tuo, e quando te lo ha dato registralo: scrivi al tuo assistente MENU e poi scegli Gestisci un cliente, ti apro la sua scheda e metti SI alla voce del consenso.",
+   "DATI +393001000107"
+  ],
+  [
+   "MEDIA",
+   "CHIARA VITALE",
+   "+393001000106",
+   "Il percorso finisce fra 1 settimana",
+   "Scade il 24/09/2026 e restano 3 lezioni. \n\nSe avete deciso di andare avanti, sposta la data dal telefono: scrivi al tuo assistente MENU, Gestisci un cliente e poi Aggiungi lezioni: lì metti la nuova data di fine.",
+   "PROROGA +393001000106 "
+  ],
+  [
+   "MEDIA",
+   "CHIARA VITALE",
+   "+393001000106",
+   "Il percorso non ci sta nei tempi",
+   "Restano 3 lezioni e 1 settimane: servono 3 allenamenti a settimana, e di solito ne fa 2. \n\nO si aumenta il ritmo, o si sposta la data di fine.",
+   ""
+  ],
+  [
+   "MEDIA",
+   "GIULIA BIANCHI",
+   "+393001000101",
+   "Sta finendo il pacchetto",
+   "Gli restano 2 lezioni",
+   "RINNOVA +393001000101 10"
+  ],
+  [
+   "MEDIA",
+   "DAVIDE RIVA",
+   "+393001000108",
+   "Paga 8 lezioni al mese e questo mese ne ha fatte 3",
+   "Le lezioni non fatte questo mese si perdono: paga per intero e usa metà. Una telefonata adesso costa meno di un rinnovo perso.",
+   ""
+  ],
+  [
+   "MEDIA",
+   "Rossi Andrea",
+   "",
+   "Evento del 16/09 non collegato a nessun cliente",
+   "Titolo dell'allenamento: «Rossi Andrea». \nControlla che sia scritto come nome e cognome del cliente, nello stesso ordine della scheda. \nSe lo hai già sistemato, questa riga sparisce da sola fra 12 giorni.",
+   ""
+  ],
+  [
+   "BASSA",
+   "FRANCESCA ROMANO",
+   "+393001000112",
+   "In pausa",
+   "Torna attiva da sola il 2026-09-28",
+   ""
+  ]
+ ],
+ "clienti": [
+  [
+   "GIULIA",
+   "BIANCHI",
+   "+393001000101",
+   "ATTIVO",
+   "Pacchetto",
+   10,
+   8,
+   2,
+   "ven 19 set, 18:00",
+   "mer 17 set, 18:00",
+   "SI",
+   "3 - Ottima",
+   "",
+   ""
+  ],
+  [
+   "MARCO",
+   "ROSSI",
+   "+393001000102",
+   "ATTIVO",
+   "Pacchetto",
+   20,
+   11,
+   9,
+   "sab 20 set, 10:00",
+   "gio 18 set, 10:00",
+   "SI",
+   "3 - Ottima",
+   "",
+   "Sara Conti"
+  ],
+  [
+   "SARA",
+   "CONTI",
+   "+393001000103",
+   "ATTIVO",
+   "Pacchetto",
+   10,
+   11,
+   -1,
+   "sab 20 set, 10:00",
+   "gio 18 set, 10:00",
+   "SI",
+   "2 - Ok",
+   "",
+   "Marco Rossi - prenoti tu"
+  ],
+  [
+   "LUCA",
+   "FERRARI",
+   "+393001000104",
+   "ATTIVO",
+   "Pacchetto",
+   10,
+   10,
+   0,
+   "",
+   "mar 16 set, 07:30",
+   "SI",
+   "3 - Ottima",
+   "",
+   ""
+  ],
+  [
+   "ALESSIA",
+   "GALLO",
+   "+393001000105",
+   "ATTIVO",
+   "Abbonamento mensile",
+   8,
+   5,
+   "5 di 8 questo mese",
+   "ven 19 set, 07:00",
+   "mer 17 set, 07:00",
+   "SI",
+   "3 - Ottima",
+   "",
+   ""
+  ],
+  [
+   "CHIARA",
+   "VITALE",
+   "+393001000106",
+   "ATTIVO",
+   "Percorso (fino al 24/09/2026)",
+   12,
+   9,
+   "3 in 1 sett.",
+   "lun 22 set, 19:00",
+   "gio 18 set, 19:00",
+   "SI",
+   "2 - Ok",
+   "",
+   ""
+  ],
+  [
+   "ELENA",
+   "MORETTI",
+   "+393001000107",
+   "ATTIVO",
+   "A consumo",
+   "",
+   4,
+   "",
+   "",
+   "lun 15 set, 12:30",
+   "NO",
+   "",
+   "",
+   ""
+  ],
+  [
+   "DAVIDE",
+   "RIVA",
+   "+393001000108",
+   "ATTIVO",
+   "Abbonamento mensile",
+   8,
+   3,
+   "3 di 8 questo mese",
+   "",
+   "mar 9 set, 18:00",
+   "SI",
+   "",
+   "",
+   ""
+  ],
+  [
+   "PAOLO",
+   "GRECO",
+   "+393001000109",
+   "ATTIVO",
+   "Pacchetto",
+   20,
+   4,
+   16,
+   "gio 19 set, 13:30",
+   "mar 16 set, 13:30",
+   "SI",
+   "3 - Ottima",
+   "",
+   ""
+  ],
+  [
+   "MARTINA",
+   "COLOMBO",
+   "+393001000110",
+   "ATTIVO",
+   "Pacchetto",
+   10,
+   3,
+   7,
+   "ven 19 set, 09:00",
+   "mer 17 set, 09:00",
+   "SI",
+   "3 - Ottima",
+   "",
+   ""
+  ],
+  [
+   "ANDREA",
+   "FONTANA",
+   "+393001000111",
+   "ATTIVO",
+   "Pacchetto",
+   20,
+   14,
+   6,
+   "sab 20 set, 11:00",
+   "gio 18 set, 11:00",
+   "SI",
+   "",
+   "",
+   ""
+  ],
+  [
+   "FRANCESCA",
+   "ROMANO",
+   "+393001000112",
+   "FERIE",
+   "Abbonamento mensile",
+   8,
+   2,
+   "2 di 8 questo mese",
+   "",
+   "gio 4 set, 18:00",
+   "SI",
+   "3 - Ottima",
+   "2026-09-28",
+   ""
+  ],
+  [
+   "SIMONE",
+   "BARBIERI",
+   "+393001000113",
+   "ATTIVO",
+   "Pacchetto",
+   10,
+   6,
+   4,
+   "lun 22 set, 20:00",
+   "mer 17 set, 20:00",
+   "SI",
+   "2 - Ok",
+   "",
+   ""
+  ],
+  [
+   "VALENTINA",
+   "RIZZO",
+   "+393001000114",
+   "ATTIVO",
+   "Percorso (fino al 30/11/2026)",
+   24,
+   6,
+   "18 in 11 sett.",
+   "ven 19 set, 12:00",
+   "mar 16 set, 12:00",
+   "SI",
+   "3 - Ottima",
+   "",
+   ""
+  ],
+  [
+   "ROBERTO",
+   "MARINI",
+   "+393001000115",
+   "CHIUSO",
+   "Pacchetto",
+   10,
+   10,
+   0,
+   "",
+   "gio 28 ago, 18:00",
+   "SI",
+   "",
+   "",
+   ""
+  ]
+ ],
+ "messaggi": [
+  [
+   "17/09/2026",
+   "22:16",
+   "GIULIA BIANCHI",
+   "Richiesta di feedback",
+   "Risposta del cliente"
+  ],
+  [
+   "17/09/2026",
+   "22:15",
+   "ALESSIA GALLO",
+   "Richiesta di feedback",
+   "Risposta del cliente"
+  ],
+  [
+   "17/09/2026",
+   "20:31",
+   "PAOLO GRECO",
+   "Posto liberato",
+   "Prenotato dal cliente"
+  ],
+  [
+   "17/09/2026",
+   "20:30",
+   "PAOLO GRECO",
+   "Posto liberato",
+   "Inviato"
+  ],
+  [
+   "17/09/2026",
+   "20:02",
+   "MARCO ROSSI",
+   "Promemoria allenamento",
+   "Risposta del cliente"
+  ],
+  [
+   "17/09/2026",
+   "20:01",
+   "SARA CONTI",
+   "Promemoria allenamento",
+   "Risposta del cliente"
+  ],
+  [
+   "17/09/2026",
+   "20:00",
+   "GIULIA BIANCHI",
+   "Promemoria allenamento",
+   "Inviato"
+  ],
+  [
+   "17/09/2026",
+   "20:00",
+   "MARCO ROSSI",
+   "Promemoria allenamento",
+   "Inviato"
+  ],
+  [
+   "17/09/2026",
+   "20:00",
+   "SARA CONTI",
+   "Promemoria allenamento",
+   "Inviato"
+  ],
+  [
+   "17/09/2026",
+   "20:00",
+   "ALESSIA GALLO",
+   "Promemoria allenamento",
+   "Inviato"
+  ],
+  [
+   "17/09/2026",
+   "20:00",
+   "CHIARA VITALE",
+   "Promemoria allenamento",
+   "Inviato"
+  ],
+  [
+   "17/09/2026",
+   "20:00",
+   "MARTINA COLOMBO",
+   "Promemoria allenamento",
+   "Inviato"
+  ],
+  [
+   "17/09/2026",
+   "20:00",
+   "GIULIA BIANCHI",
+   "Avviso lezioni in esaurimento",
+   "Inviato"
+  ],
+  [
+   "17/09/2026",
+   "20:00",
+   "ELENA MORETTI",
+   "Promemoria allenamento",
+   "Non inviato (manca il consenso)"
+  ],
+  [
+   "16/09/2026",
+   "20:00",
+   "LUCA FERRARI",
+   "Avviso pacchetto finito",
+   "Inviato"
+  ],
+  [
+   "16/09/2026",
+   "20:00",
+   "ANDREA FONTANA",
+   "Promemoria allenamento",
+   "Inviato"
+  ],
+  [
+   "16/09/2026",
+   "20:00",
+   "SIMONE BARBIERI",
+   "Promemoria allenamento",
+   "Inviato"
+  ],
+  [
+   "16/09/2026",
+   "20:00",
+   "VALENTINA RIZZO",
+   "Promemoria allenamento",
+   "Inviato"
+  ],
+  [
+   "15/09/2026",
+   "20:00",
+   "DAVIDE RIVA",
+   "Invito a prenotare",
+   "Inviato"
+  ],
+  [
+   "15/09/2026",
+   "20:00",
+   "PAOLO GRECO",
+   "Promemoria allenamento",
+   "Inviato"
+  ],
+  [
+   "14/09/2026",
+   "09:00",
+   "SIMONE BARBIERI",
+   "Check-in del lunedì",
+   "Risposta del cliente"
+  ],
+  [
+   "14/09/2026",
+   "09:00",
+   "SIMONE BARBIERI",
+   "Check-in del lunedì",
+   "Inviato"
+  ],
+  [
+   "14/09/2026",
+   "09:00",
+   "MARTINA COLOMBO",
+   "Check-in del lunedì",
+   "Inviato"
+  ],
+  [
+   "13/09/2026",
+   "17:00",
+   "DAVIDE RIVA",
+   "Invito a prenotare",
+   "Inviato"
+  ],
+  [
+   "12/09/2026",
+   "20:00",
+   "FRANCESCA ROMANO",
+   "Promemoria allenamento",
+   "Non inviato (in ferie)"
+  ],
+  [
+   "10/09/2026",
+   "08:05",
+   "GIULIA BIANCHI",
+   "Auguri di compleanno",
+   "Risposta del cliente"
+  ],
+  [
+   "10/09/2026",
+   "08:00",
+   "GIULIA BIANCHI",
+   "Auguri di compleanno",
+   "Inviato"
+  ],
+  [
+   "08/09/2026",
+   "18:40",
+   "VALENTINA RIZZO",
+   "Messaggio di benvenuto",
+   "Risposta del cliente"
+  ],
+  [
+   "08/09/2026",
+   "18:39",
+   "VALENTINA RIZZO",
+   "Messaggio di benvenuto",
+   "Inviato"
+  ]
+ ],
+ "statistiche": {
+  "aggiornato": "17 settembre 2026",
+  "mesi": [
+   {
+    "etichetta": "giu 2026",
+    "lezioni_fatte": 92,
+    "lezioni_paganti": 88,
+    "lezioni_prova": 4,
+    "disdette": 5,
+    "clienti_paganti": 12,
+    "nuovi_clienti": 2,
+    "clienti_persi": 1,
+    "incasso_stimato": 3560
+   },
+   {
+    "etichetta": "lug 2026",
+    "lezioni_fatte": 84,
+    "lezioni_paganti": 81,
+    "lezioni_prova": 3,
+    "disdette": 7,
+    "clienti_paganti": 12,
+    "nuovi_clienti": 1,
+    "clienti_persi": 0,
+    "incasso_stimato": 3290
+   },
+   {
+    "etichetta": "ago 2026",
+    "lezioni_fatte": 58,
+    "lezioni_paganti": 56,
+    "lezioni_prova": 2,
+    "disdette": 3,
+    "clienti_paganti": 10,
+    "nuovi_clienti": 0,
+    "clienti_persi": 1,
+    "incasso_stimato": 2240
+   },
+   {
+    "etichetta": "set 2026",
+    "lezioni_fatte": 61,
+    "lezioni_paganti": 59,
+    "lezioni_prova": 2,
+    "disdette": 2,
+    "clienti_paganti": 14,
+    "nuovi_clienti": 2,
+    "clienti_persi": 0,
+    "incasso_stimato": 2380
+   }
+  ]
+ },
+ "soldi": {
+  "incassato_mese": 533.33,
+  "da_incassare": 666.67,
+  "in_ritardo": 200,
+  "mese": "settembre 2026",
+  "clienti": [
+   {
+    "cliente_id": "CL00013",
+    "telefono": "+393001000103",
+    "nome": "SARA CONTI",
+    "semaforo": "rosso",
+    "testo": "1 rate su 2 pagate · restano 200 € · in ritardo dal 10 set",
+    "totale": 400,
+    "pagato": 200,
+    "residuo": 200,
+    "rate_pagate": 1,
+    "rate_totali": 2,
+    "prossima_importo": 200,
+    "prossima_scadenza": "2026-09-10",
+    "metodo": "contanti",
+    "comando": "PAGATO +393001000103",
+    "righe": [
+     {
+      "n": 1,
+      "su": 2,
+      "importo": 200,
+      "stato": "PAGATA",
+      "scadenza": "2026-08-10",
+      "pagata_il": "2026-08-09",
+      "nota": ""
+     },
+     {
+      "n": 2,
+      "su": 2,
+      "importo": 200,
+      "stato": "IN_RITARDO",
+      "scadenza": "2026-09-10",
+      "pagata_il": "",
+      "nota": ""
+     }
+    ]
+   },
+   {
+    "cliente_id": "CL00012",
+    "telefono": "+393001000102",
+    "nome": "MARCO ROSSI",
+    "semaforo": "giallo",
+    "testo": "1 rate su 3 pagate · restano 266,67 € · prossima 22 set",
+    "totale": 400,
+    "pagato": 133.33,
+    "residuo": 266.67,
+    "rate_pagate": 1,
+    "rate_totali": 3,
+    "prossima_importo": 133.33,
+    "prossima_scadenza": "2026-09-22",
+    "metodo": "bonifico",
+    "comando": "PAGATO +393001000102",
+    "righe": [
+     {
+      "n": 1,
+      "su": 3,
+      "importo": 133.33,
+      "stato": "PAGATA",
+      "scadenza": "2026-08-22",
+      "pagata_il": "2026-09-01",
+      "nota": ""
+     },
+     {
+      "n": 2,
+      "su": 3,
+      "importo": 133.33,
+      "stato": "DA_PAGARE",
+      "scadenza": "2026-09-22",
+      "pagata_il": "",
+      "nota": ""
+     },
+     {
+      "n": 3,
+      "su": 3,
+      "importo": 133.34,
+      "stato": "DA_PAGARE",
+      "scadenza": "2026-10-22",
+      "pagata_il": "",
+      "nota": ""
+     }
+    ]
+   },
+   {
+    "cliente_id": "CL00014",
+    "telefono": "+393001000104",
+    "nome": "LUCA FERRARI",
+    "semaforo": "verde",
+    "testo": "pagato 400 € · restano 200 € · prossima 15 ott",
+    "totale": 600,
+    "pagato": 400,
+    "residuo": 200,
+    "rate_pagate": 2,
+    "rate_totali": 3,
+    "prossima_importo": 200,
+    "prossima_scadenza": "2026-10-15",
+    "metodo": "carta",
+    "comando": "PAGATO +393001000104",
+    "righe": [
+     {
+      "n": 1,
+      "su": 3,
+      "importo": 200,
+      "stato": "PAGATA",
+      "scadenza": "2026-07-15",
+      "pagata_il": "2026-07-14",
+      "nota": ""
+     },
+     {
+      "n": 2,
+      "su": 3,
+      "importo": 200,
+      "stato": "PAGATA",
+      "scadenza": "2026-08-15",
+      "pagata_il": "2026-08-15",
+      "nota": ""
+     },
+     {
+      "n": 3,
+      "su": 3,
+      "importo": 200,
+      "stato": "DA_PAGARE",
+      "scadenza": "2026-10-15",
+      "pagata_il": "",
+      "nota": ""
+     }
+    ]
+   },
+   {
+    "cliente_id": "CL00011",
+    "telefono": "+393001000101",
+    "nome": "GIULIA BIANCHI",
+    "semaforo": "verde",
+    "testo": "tutto pagato · 400 €",
+    "totale": 400,
+    "pagato": 400,
+    "residuo": 0,
+    "rate_pagate": 1,
+    "rate_totali": 1,
+    "prossima_importo": 0,
+    "prossima_scadenza": "",
+    "metodo": "bonifico",
+    "comando": "PAGATO +393001000101",
+    "righe": [
+     {
+      "n": 1,
+      "su": 1,
+      "importo": 400,
+      "stato": "PAGATA",
+      "scadenza": "",
+      "pagata_il": "2026-09-08",
+      "nota": ""
+     }
+    ]
+   }
+  ]
+ }
+}
+</script>
 
 <script>
 (function(){

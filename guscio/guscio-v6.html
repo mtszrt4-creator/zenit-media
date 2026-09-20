@@ -88,6 +88,12 @@ button{background:none;border:0;cursor:pointer}
 .riga.giu{opacity:.62}
 .riga.giu .t b{text-decoration:line-through;text-decoration-color:var(--spento)}
 .chip.piano{color:var(--spento);border-color:var(--bordo);background:transparent;letter-spacing:.04em}
+/* automazioni per piano (v9) */
+.tit.piano-t{margin-top:16px}
+.tit.piano-t .mio{color:var(--verde);border:1px solid var(--v40);background:var(--v08);border-radius:999px;padding:2px 8px;font-size:10.5px;letter-spacing:.04em}
+.tit.piano-t .fuori{color:var(--spento);font-weight:600;letter-spacing:0;text-transform:none;font-size:12px}
+.box.fuori .riga{cursor:default}
+.box.fuori .riga .t b{text-decoration:none;color:var(--fioco)}
 .chip.spenta{color:var(--ambra);border-color:var(--a30);background:var(--a12)}
 .autonota{font-size:12.5px;color:var(--spento);margin:6px 0 12px}
 .parola{font-weight:700}
@@ -470,9 +476,9 @@ html[data-tema="chiaro"] .gr:nth-child(even){background:rgba(0,0,0,.025)}
   <!-- ============ AUTOMAZIONI (v7) ============ -->
   <section id="s-automazioni" hidden>
     <div class="tit">Le automazioni <span class="c" id="c-auto">0</span></div>
-    <div class="autonota">Quello che faccio per te, ogni giorno. Tocca <b>Spegni</b> per fermarne una:
-      si apre WhatsApp col messaggio pronto, tu mandi e basta. Quelle barrate sono del piano
-      pi&ugrave; alto: le vedi, non partono.</div>
+    <div class="autonota">Quello che faccio per te, ogni giorno, diviso per piano. Sulle tue tocca <b>Spegni</b>
+      o <b>Accendi</b>: si apre WhatsApp col messaggio pronto, tu mandi e basta. Quelle dei piani
+      pi&ugrave; alti le vedi, senza interruttore: se ti servono, scrivici e cambiamo piano.</div>
     <div id="l-auto"></div>
     <div class="azioni" id="az-auto"><button class="btn" type="button" data-sez="messaggi">Vedi i messaggi mandati &rsaquo;</button></div>
   </section>
@@ -569,7 +575,8 @@ html[data-tema="chiaro"] .gr:nth-child(even){background:rgba(0,0,0,.025)}
         <span>Nella pagina <b>Automazioni</b> vedi ogni cosa che faccio per te: promemoria, avvisi,
         pagamenti, proposte. Ognuna ha il suo tasto <b>Spegni</b> / <b>Accendi</b>: si apre WhatsApp
         col messaggio pronto, tu lo mandi e da quel momento quella cosa non parte pi&ugrave;
-        (o riparte). Quelle barrate sono del piano pi&ugrave; alto: se ti servono, scrivici.</span></div></div>
+        (o riparte). Le automazioni sono divise per piano, Base, Completo e PRO: quelle dei piani
+        pi&ugrave; alti le vedi con la loro descrizione ma senza interruttore. Se ti servono, scrivici.</span></div></div>
     </div>
     <button class="apri" type="button" aria-expanded="false" data-ap="g-tel">
       <b>Tienitelo sul telefono</b><span class="frec">&rsaquo;</span></button>
@@ -1379,22 +1386,33 @@ function disegnaAuto(){
   var mio = PIANI[pianoPT] === undefined ? 0 : PIANI[pianoPT];
   var spente = Array.isArray(AUTO.spente) ? AUTO.spente : String(AUTO.spente || '').split(',').map(function(x){ return x.trim(); }).filter(Boolean);
   var nAttive = 0;
-  var righe = AUTOM.map(function(a, i){
-    var nel = PIANI[a.p] <= mio, giu = spente.indexOf(a.k) > -1;
-    if(nel && !giu) nAttive++;
-    var pall = !nel ? 'p-grigio' : (giu ? 'p-giallo' : 'p-verde');
-    var chip = !nel ? '<span class="chip piano">' + (a.p === 'PRO' ? 'PRO' : 'Completo') + '</span>'
-             : (giu ? '<span class="chip spenta">spenta</span>' : '<span class="chip ok">attiva</span>');
-    var az = nel ? bottoneComando((giu ? 'ACCENDI ' : 'SPEGNI ') + a.k, giu ? 'Accendi' : 'Spegni', true, !giu)
-                 : '<span class="autonota" style="margin:0">Nel piano ' + (a.p === 'PRO' ? 'PRO' : 'Completo') + ': se ti serve, scrivici.</span>';
-    return '<button class="riga' + (nel ? '' : ' giu') + '" type="button" aria-expanded="false" data-ap="a' + i + '">' +
-      '<span class="pallino ' + pall + '"></span>' +
-      '<span class="t"><b>' + esc(a.n) + '</b><span>' + esc(a.d) + '</span></span>' + chip +
-      '<span class="frec">&rsaquo;</span></button>' +
-      '<div class="det" id="a' + i + '" hidden><div class="azioni">' + az + '</div></div>';
+  /* v9: tre sezioni, una per piano. Le righe del piano del PT (e di quelli sotto)
+     hanno l'interruttore; quelle dei piani sopra si vedono e basta. */
+  var NOMI = { BASE:'Base', COMPLETO:'Completo', PRO:'PRO' };
+  var sezioni = ['BASE','COMPLETO','PRO'].map(function(p){
+    var nel = PIANI[p] <= mio, attiveP = 0;
+    var righe = AUTOM.filter(function(a){ return a.p === p; }).map(function(a){
+      var i = AUTOM.indexOf(a), giu = nel && spente.indexOf(a.k) > -1;
+      if(nel && !giu){ nAttive++; attiveP++; }
+      var pall = !nel ? 'p-grigio' : (giu ? 'p-giallo' : 'p-verde');
+      var chip = !nel ? '' : (giu ? '<span class="chip spenta">spenta</span>' : '<span class="chip ok">attiva</span>');
+      var az = nel ? bottoneComando((giu ? 'ACCENDI ' : 'SPEGNI ') + a.k, giu ? 'Accendi' : 'Spegni', true, !giu)
+                   : '<span class="autonota" style="margin:0">Non \u00e8 nel tuo piano: \u00e8 del ' + NOMI[p] + '. Se ti serve, scrivici.</span>';
+      return '<button class="riga" type="button" aria-expanded="false" data-ap="a' + i + '">' +
+        '<span class="pallino ' + pall + '"></span>' +
+        '<span class="t"><b>' + esc(a.n) + '</b><span>' + esc(a.d) + '</span></span>' + chip +
+        '<span class="frec">&rsaquo;</span></button>' +
+        '<div class="det" id="a' + i + '" hidden><div class="azioni">' + az + '</div></div>';
+    }).join('');
+    var quante = AUTOM.filter(function(a){ return a.p === p; }).length;
+    var testa = '<div class="tit piano-t">Piano ' + NOMI[p] +
+      (p === pianoPT ? ' <span class="mio">il tuo piano</span>' : '') +
+      (nel ? ' <span class="c">' + attiveP + ' di ' + quante + ' attive</span>'
+           : ' <span class="fuori">' + quante + ' funzioni in pi\u00f9, non nel tuo piano</span>') + '</div>';
+    return testa + '<div class="box' + (nel ? '' : ' fuori') + '">' + righe + '</div>';
   }).join('');
   $('#c-auto').textContent = nAttive + ' attive';
-  el.innerHTML = '<div class="box">' + righe + '</div>';
+  el.innerHTML = sezioni;
   var azA = $('#az-auto');
   if(azA && !azA.querySelector('[data-agg]')) azA.insertAdjacentHTML('afterbegin',
     '<span data-agg>' + bottoneComando('AGGIORNA', 'Aggiorna adesso', true, false) + '</span>');

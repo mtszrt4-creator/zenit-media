@@ -159,6 +159,20 @@ section[hidden]{display:none}
 .riga:active{background:var(--piu)}
 .pallino{width:8px;height:8px;border-radius:99px;flex:0 0 auto}
 .pallino.p-grigio{background:var(--bordo)}
+/* stato vivo (v8) */
+.vivo{margin:0 0 14px}
+.vivo .box{padding:10px 12px}
+.vivo .cmd{display:flex;gap:10px;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--bordo);font-size:13px}
+.vivo .cmd:last-of-type{border-bottom:0}
+.vivo .cmd .q{color:var(--fioco);font-variant-numeric:tabular-nums;flex:0 0 auto}
+.vivo .cmd b{color:var(--bianco)}
+.vivo .cmd .ok{color:var(--verde)}
+.vivo .cmd .ko{color:var(--ambra)}
+.vivo .cmd .d{color:var(--spento);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vivo .sotto{font-size:12px;color:var(--spento);margin:8px 0 0}
+.vivo .azioni{margin-top:8px}
+.grafici .tit{margin-top:10px}
+.grafico.mini{height:96px}
 .p-ok{background:var(--verde)} .p-attesa{background:var(--ambra)}
 .p-oltre{background:var(--rosa)} .p-fermo{background:var(--fioco)}
 .p-muto{background:var(--rosso)}
@@ -424,6 +438,7 @@ html[data-tema="chiaro"] .gr:nth-child(even){background:rgba(0,0,0,.025)}
     <div class="tessere" id="t-oggi"></div>
     <div class="stasera" id="stasera" hidden></div>
     <div class="letto" id="letto" hidden></div>
+    <div class="vivo" id="vivo" hidden></div>
     <div class="tit">Da fare <span class="c" id="c-fare">0</span></div>
     <div class="strumenti">
       <label class="cerca">
@@ -459,7 +474,7 @@ html[data-tema="chiaro"] .gr:nth-child(even){background:rgba(0,0,0,.025)}
       si apre WhatsApp col messaggio pronto, tu mandi e basta. Quelle barrate sono del piano
       pi&ugrave; alto: le vedi, non partono.</div>
     <div id="l-auto"></div>
-    <div class="azioni"><button class="btn" type="button" data-sez="messaggi">Vedi i messaggi mandati &rsaquo;</button></div>
+    <div class="azioni" id="az-auto"><button class="btn" type="button" data-sez="messaggi">Vedi i messaggi mandati &rsaquo;</button></div>
   </section>
 
   <!-- ============ MESSAGGI ============ -->
@@ -813,6 +828,7 @@ var VIVE = { MENU:1, MALATTIA:1, CHIUDO:1, RIENTRO:1, RIPRENDI:1, PAUSA:1,
              ALIAS:1, OBIETTIVO:1, SOSPENDI:1, CHIUDI:1, FERIE:1 };
 VIVE.PAGATO = 1; VIVE.SOLDI = 1; VIVE.RATE = 1;   /* 20/09: i soldi */
 VIVE.SPEGNI = 1; VIVE.ACCENDI = 1;               /* 20/09: le automazioni */
+VIVE.AGGIORNA = 1;                                /* 20/09 sera: rifai il cruscotto adesso */
 function viva(cmd){
   return VIVE[(t(cmd).split(/\s+/)[0] || '').toUpperCase()] === 1;
 }
@@ -1132,7 +1148,7 @@ function scheda(c){
   h += voce('Stato', v(c, C.STATO) || 'ATTIVO');
   h += voce('Come paga', v(c, C.PAGA));
   var sl = soldiDi(c);
-  if(sl) h += voce('Pagamenti', parolaSoldi(sl.semaforo),   /* la parola sola: il dettaglio sta nella pagina Soldi */
+  if(sl) h += voce('Pagamenti', parolaSoldi(sl.semaforo) + ultimoPagato(sl),   /* la parola e l'ultima data: il dettaglio sta nella pagina Soldi */
     sl.semaforo === 'rosso' ? 'no' : (sl.semaforo === 'giallo' ? 'attesa' : 'si'));
   h += voce('Lezioni pagate', v(c, C.TOT));
   h += voce('Usate', v(c, C.USATE));
@@ -1217,6 +1233,11 @@ function disegnaClienti(){
 /* ---------- SOLDI ---------- */
 var SOLDI = (D.soldi && typeof D.soldi === 'object') ? D.soldi : null;
 var fSoldi = 'tutti';
+function ultimoPagato(sl){
+  var d = '';
+  (sl.righe || []).forEach(function(r){ if(r.stato === 'PAGATA' && r.pagata_il && r.pagata_il > d) d = r.pagata_il; });
+  return d ? ' \u00b7 ultimo il ' + giornoIt(d) : (sl.residuo > 0 && sl.prossima_scadenza ? ' \u00b7 prossima il ' + giornoIt(sl.prossima_scadenza) : '');
+}
 function parolaSoldi(sem){
   return sem === 'rosso' ? 'In ritardo' : (sem === 'giallo' ? 'In scadenza' : 'In regola');
 }
@@ -1264,6 +1285,7 @@ function disegnaSoldi(){
     schedaNum(euro(SOLDI.da_incassare), 'da incassare', '', Number(SOLDI.da_incassare) > 0 ? 'crit' : '') +
     schedaNum(euro(SOLDI.in_ritardo), 'in ritardo', '', Number(SOLDI.in_ritardo) > 0 ? 'male' : '');
   var lista = (SOLDI.clienti || []).filter(function(x){ return fSoldi === 'tutti' || x.semaforo === fSoldi; });
+  var grafIncassi = incassiPerMese(SOLDI.clienti || []);
   $('#c-soldi').textContent = lista.length + (lista.length !== (SOLDI.clienti || []).length ? ' su ' + SOLDI.clienti.length : '');
   if(!lista.length){
     el.innerHTML = (SOLDI.clienti || []).length
@@ -1271,7 +1293,7 @@ function disegnaSoldi(){
       : vuoto('Nessun pagamento registrato ancora', 'Scrivi al tuo assistente PAGATO e il nome del cliente.');
     return;
   }
-  el.innerHTML = '<div class="box">' + lista.map(function(x, i){
+  el.innerHTML = grafIncassi + '<div class="box">' + lista.map(function(x, i){
     var righe = (x.righe || []).map(function(r){
       var cl = r.stato === 'PAGATA' ? 'pagata' : (r.scadenza && r.scadenza < oggiIso() ? 'ritardo' : 'attesa');
       var st = r.stato === 'PAGATA' ? 'pagata il ' + giornoIt(r.pagata_il)
@@ -1298,6 +1320,26 @@ function disegnaSoldi(){
         (az ? '<div class="azioni">' + az + '</div>' : '') +
       '</div>';
   }).join('') + '</div>';
+}
+/* Gli incassi mese per mese si calcolano qui, dalle rate PAGATE con la data:
+   gli ultimi sei mesi, mese in corso compreso, anche a zero. */
+function incassiPerMese(clienti){
+  var MESI = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+  var per = {}, oggi = new Date(), chiavi = [];
+  for(var k = 5; k >= 0; k--){
+    var d = new Date(oggi.getFullYear(), oggi.getMonth() - k, 1);
+    var c = d.getFullYear() + '-' + (d.getMonth() < 9 ? '0' : '') + (d.getMonth() + 1);
+    chiavi.push(c); per[c] = { v: 0, e: MESI[d.getMonth()] + ' ' + d.getFullYear() };
+  }
+  var tot = 0;
+  clienti.forEach(function(x){ (x.righe || []).forEach(function(r){
+    if(r.stato !== 'PAGATA' || !r.pagata_il) return;
+    var c = String(r.pagata_il).slice(0, 7);
+    if(per[c]){ per[c].v += Number(r.importo) || 0; tot += Number(r.importo) || 0; }
+  }); });
+  if(!tot) return '';
+  return '<div class="tit">Incassi <span class="c">mese per mese</span></div>' +
+    graficoLinea(chiavi.map(function(c){ return { v: Math.round(per[c].v), e: per[c].e, t: euro(per[c].v) }; }), true);
 }
 function oggiIso(){
   var d = new Date(), p = function(n){ return (n < 10 ? '0' : '') + n; };
@@ -1353,6 +1395,9 @@ function disegnaAuto(){
   }).join('');
   $('#c-auto').textContent = nAttive + ' attive';
   el.innerHTML = '<div class="box">' + righe + '</div>';
+  var azA = $('#az-auto');
+  if(azA && !azA.querySelector('[data-agg]')) azA.insertAdjacentHTML('afterbegin',
+    '<span data-agg>' + bottoneComando('AGGIORNA', 'Aggiorna adesso', true, false) + '</span>');
 }
 
 /* ---------- MESSAGGI ---------- */
@@ -1444,6 +1489,24 @@ function schedaNum(valore, etichetta, sotto, classe){
     '</div><div class="e">' + esc(etichetta) + '</div>' +
     (sotto ? '<div class="d">' + esc(sotto) + '</div>' : '') + '</div>';
 }
+/* Una linea con i puntini su una serie [{v, e, t}] (valore, etichetta del mese,
+   testo del punto). W 100 x H 60 in viewBox, i punti ai bordi hanno 6 di margine. */
+function graficoLinea(serie, mini){
+  var n = serie.length; if(n < 2) return '';
+  var max = Math.max.apply(null, serie.map(function(p){ return p.v || 0; })) || 1;
+  var W = 100, H = 60, px = function(i){ return 6 + i * (W - 12) / (n - 1); },
+      py = function(v){ return 6 + (H - 12) * (1 - v / max); };
+  var punti = serie.map(function(p, i){ return { x: px(i), y: py(p.v || 0), v: p.v || 0, e: p.e, t: p.t }; });
+  var linea = punti.map(function(p, i){ return (i ? 'L' : 'M') + p.x.toFixed(1) + ' ' + p.y.toFixed(1); }).join(' ');
+  var area = linea + ' L' + punti[n - 1].x.toFixed(1) + ' ' + H + ' L' + punti[0].x.toFixed(1) + ' ' + H + ' Z';
+  return '<div class="box"><div class="grafico' + (mini ? ' mini' : '') + '"><div class="tela">' +
+    '<svg class="linea" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true">' +
+    '<path class="area" d="' + area + '"/><path class="riga" d="' + linea + '"/></svg>' +
+    punti.map(function(p, i){ return '<i class="pt' + (i === n - 1 ? ' ultimo' : '') + '" style="left:' + p.x.toFixed(1) + '%;top:' + (p.y / H * 100).toFixed(1) + '%" title="' + esc(p.e) + ': ' + esc(p.t !== undefined ? p.t : p.v) + '"></i>'; }).join('') +
+    '</div></div><div class="gx">' + serie.map(function(p){
+      return '<span>' + esc(String(p.e).split(' ')[0]) + '</span>'; }).join('') +
+    '</div></div>';
+}
 function disegnaStat(){
   reso.stat = 1;
   var el = $('#l-stat'), h = '', mesi = (STAT && Array.isArray(STAT.mesi)) ? STAT.mesi : [];
@@ -1455,9 +1518,7 @@ function disegnaStat(){
   var disp = MISURE.filter(function(x){ return haVoce(mesi, x[0]); });
   if(!disp.length || disp.map(function(x){ return x[0]; }).indexOf(periodo) === -1)
     periodo = disp.length ? disp[0][0] : 'lezioni_fatte';
-  $('#p-stat').innerHTML = disp.length < 2 ? '' : disp.map(function(x){
-    return '<button class="pill" type="button" data-fs="' + x[0] + '" aria-pressed="' +
-      (x[0] === periodo) + '">' + x[1] + '</button>'; }).join('');
+  $('#p-stat').innerHTML = '';   /* v8: un grafico per ogni misura, le pillole non servono piu */
 
   if(!mesi.length){
     h = vuoto('Il primo mese arriva a fine mese',
@@ -1477,24 +1538,14 @@ function disegnaStat(){
     h += '<div class="tit">' + esc(ora.etichetta || 'questo mese') +
          ' <span class="c">mese in corso</span></div><div class="stat">' + c.join('') + '</div>';
 
-    /* --- l andamento, sulla misura scelta --- */
-    var s = mesi.slice(-12).filter(function(m){ return nMese(m, periodo) !== null; });
-    if(s.length > 1){
-      var max = Math.max.apply(null, s.map(function(m){ return nMese(m, periodo) || 0; })) || 1;
-      /* una linea con i puntini, non colonne piene: W 100 x H 100 in viewBox, i punti ai bordi hanno 8 di margine */
-      var W = 100, H = 60, n = s.length, px = function(i){ return 6 + i * (W - 12) / (n - 1); },
-          py = function(v){ return 6 + (H - 12) * (1 - v / max); };
-      var punti = s.map(function(m, i){ return { x: px(i), y: py(nMese(m, periodo) || 0), v: nMese(m, periodo) || 0, e: m.etichetta }; });
-      var linea = punti.map(function(p, i){ return (i ? 'L' : 'M') + p.x.toFixed(1) + ' ' + p.y.toFixed(1); }).join(' ');
-      var area = linea + ' L' + punti[punti.length - 1].x.toFixed(1) + ' ' + H + ' L' + punti[0].x.toFixed(1) + ' ' + H + ' Z';
-      h += '<div class="tit">Andamento</div><div class="box"><div class="grafico"><div class="tela">' +
-        '<svg class="linea" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true">' +
-        '<path class="area" d="' + area + '"/><path class="riga" d="' + linea + '"/></svg>' +
-        punti.map(function(p, i){ return '<i class="pt' + (i === n - 1 ? ' ultimo' : '') + '" style="left:' + p.x.toFixed(1) + '%;top:' + (p.y / H * 100).toFixed(1) + '%" title="' + esc(p.e) + ': ' + esc(p.v) + '"></i>'; }).join('') +
-        '</div></div><div class="gx">' + s.map(function(m){
-          return '<span>' + esc(String(m.etichetta).split(' ')[0]) + '</span>'; }).join('') +
-        '</div></div>';
-    }
+    /* --- l andamento mese per mese, UNA linea per ogni misura (v8) --- */
+    h += '<div class="grafici">' + MISURE.map(function(x){
+      var s = mesi.slice(-12).filter(function(m){ return nMese(m, x[0]) !== null; });
+      if(s.length < 2) return '';
+      return '<div class="tit">' + x[1] + ' <span class="c">mese per mese</span></div>' +
+        graficoLinea(s.map(function(m){ return { v: nMese(m, x[0]) || 0, e: m.etichetta,
+          t: x[0] === 'incasso_stimato' ? soldi(nMese(m, x[0]) || 0) : String(nMese(m, x[0]) || 0) }; }), true);
+    }).join('') + '</div>';
 
     /* --- in media al mese, sui mesi CHIUSI --- */
     if(chiusi.length){
@@ -1802,6 +1853,89 @@ function daHash(){
   vai(p[0] || 'oggi');
 }
 window.addEventListener('hashchange', daHash);
+
+/* ---------- STATO VIVO (v8) ----------
+   La pagina intera la scrive CR la sera. Ma ogni comando che il PT da' (dal
+   cruscotto o scrivendo) passa da E, che lascia in KV una chiave piccola,
+   stato:<slug>: interruttori, rate toccate, ultimi comandi. Il Worker la serve
+   su /s/<slug>; qui la si legge all'apertura e quando si torna sulla pagina
+   (dopo aver mandato il messaggio su WhatsApp), e la si sovrappone ai dati
+   della sera. Se manca o fallisce, la pagina resta quella di stasera. */
+var STATO = null, slugVivo = (location.pathname.match(/\/c\/([a-z0-9-]{3,80})/) || [])[1] || '';
+function oraIt(iso){
+  var d = new Date(iso); if(isNaN(d.getTime())) return '';
+  var p = function(n){ return (n < 10 ? '0' : '') + n; };
+  var oggi = new Date();
+  var stesso = d.getFullYear() === oggi.getFullYear() && d.getMonth() === oggi.getMonth() && d.getDate() === oggi.getDate();
+  return (stesso ? '' : p(d.getDate()) + '/' + p(d.getMonth() + 1) + ' ') + p(d.getHours()) + ':' + p(d.getMinutes());
+}
+function applicaStato(st){
+  if(!st || typeof st !== 'object') return;
+  STATO = st;
+  /* gli interruttori: la colonna appena scritta vince su quella di stasera */
+  if(st.automazioni_spente !== undefined){
+    AUTO.spente = String(st.automazioni_spente || '');
+    if(reso.automazioni) disegnaAuto();
+  }
+  /* le rate toccate: si aggiornano nella lista Soldi, senza aspettare CR */
+  if(SOLDI && Array.isArray(st.pagamenti) && st.pagamenti.length){
+    var toccato = false;
+    st.pagamenti.forEach(function(p){
+      var cli = (SOLDI.clienti || []).filter(function(x){
+        return (p.cliente_id && x.cliente_id && String(x.cliente_id) === String(p.cliente_id)) ||
+               (p.telefono && x.telefono && telPulito(x.telefono) === telPulito(p.telefono)); })[0];
+      if(!cli) return;
+      var r = (cli.righe || []).filter(function(y){ return Number(y.n) === Number(p.numero_rata); })[0];
+      if(!r) return;
+      if(r.stato !== p.stato || (p.data_pagamento && r.pagata_il !== p.data_pagamento)){
+        r.stato = p.stato; if(p.data_pagamento) r.pagata_il = p.data_pagamento; toccato = true;
+      }
+    });
+    if(toccato){
+      (SOLDI.clienti || []).forEach(function(x){
+        var pag = 0, n = 0, rit = false, att = false;
+        (x.righe || []).forEach(function(r){
+          if(r.stato === 'PAGATA'){ pag += Number(r.importo) || 0; n++; }
+          else if(r.scadenza && r.scadenza < oggiIso()) rit = true; else att = true; });
+        x.pagato = Math.round(pag * 100) / 100; x.rate_pagate = n;
+        x.residuo = Math.max(0, Math.round(((Number(x.totale) || 0) - pag) * 100) / 100);
+        x.semaforo = rit ? 'rosso' : (x.residuo > 0 && att ? (x.semaforo === 'giallo' ? 'giallo' : 'verde') : 'verde');
+        if(x.residuo <= 0) x.testo = 'tutto pagato';
+      });
+      /* anche i tre totali in testa, dalle righe: sono la prima cosa che il PT guarda */
+      var mese = oggiIso().slice(0, 7), inc = 0, da = 0, rit = 0;
+      (SOLDI.clienti || []).forEach(function(x){ (x.righe || []).forEach(function(r){
+        var imp = Number(r.importo) || 0;
+        if(r.stato === 'PAGATA'){ if(String(r.pagata_il || '').slice(0, 7) === mese) inc += imp; }
+        else { da += imp; if(r.scadenza && r.scadenza < oggiIso()) rit += imp; } }); });
+      SOLDI.incassato_mese = Math.round(inc * 100) / 100; SOLDI.da_incassare = Math.round(da * 100) / 100; SOLDI.in_ritardo = Math.round(rit * 100) / 100;
+      if(reso.soldi) disegnaSoldi();
+    }
+  }
+  /* i comandi di oggi */
+  var el = $('#vivo'); if(!el) return;
+  var cmds = Array.isArray(st.comandi) ? st.comandi.slice(0, 5) : [];
+  var h = '<div class="tit">Comandi dati <span class="c">gi\u00e0 applicati</span></div><div class="box">';
+  if(!cmds.length) h += '<div class="cmd"><span class="d">Nessun comando recente.</span></div>';
+  h += cmds.map(function(c){
+    var ok = String(c.esito || '').toUpperCase() === 'OK';
+    return '<div class="cmd"><span class="q">' + esc(oraIt(c.quando)) + '</span><b>' + esc(c.comando || '') +
+      (c.parametri ? ' ' + esc(c.parametri) : '') + '</b><span class="' + (ok ? 'ok' : 'ko') + '">' + (ok ? '\u2713' : '\u2717') + '</span>' +
+      (c.dettaglio ? '<span class="d">' + esc(c.dettaglio) + '</span>' : '') + '</div>'; }).join('');
+  h += '<div class="sotto">Interruttori e pagamenti qui sono gi\u00e0 quelli nuovi. Il resto della pagina (lezioni, statistiche) si rif\u00e0 ogni sera; se lo vuoi adesso, un tocco qui sotto.</div>' +
+    '<div class="azioni">' + bottoneComando('AGGIORNA', 'Aggiorna adesso', true, false) + '</div></div>';
+  el.innerHTML = h; el.hidden = false;
+}
+function leggiStato(){
+  if(!slugVivo || !window.fetch) return;
+  fetch('/s/' + slugVivo, { cache: 'no-store' })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(applicaStato).catch(function(){});
+}
+leggiStato();
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'visible') setTimeout(leggiStato, 1500);
+});
 
 disegnaFare(); daHash();
 })();

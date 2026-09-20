@@ -243,12 +243,15 @@ select.ord{background:var(--carta);border:1px solid var(--bordo);border-radius:1
 @media(min-width:560px){.stat{grid-template-columns:repeat(3,1fr)}}
 .sc .d{font-size:11.5px;color:var(--fioco);flex:1 0 100%}
 .sc .d.su{color:var(--verde)} .sc .d.giu{color:var(--rosso)}
-.grafico{display:flex;align-items:flex-end;gap:6px;height:120px;padding:var(--imb) var(--imb) 0}
-.grafico div{flex:1;background:var(--v22);border:1px solid var(--v40);
-  border-radius:5px 5px 0 0;min-height:3px}
-.grafico div.ora{background:var(--verde);border-color:var(--verde)}
+.grafico{position:relative;height:120px;padding:var(--imb) var(--imb) 0}
+.grafico .tela{position:absolute;left:var(--imb);right:var(--imb);top:var(--imb);bottom:0}
+.grafico svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.grafico .area{fill:var(--v08)}
+.grafico .riga{fill:none;stroke:var(--verde);stroke-width:1.2;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.grafico .pt{position:absolute;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:99px;background:var(--carta);border:2px solid var(--verde);box-sizing:border-box}
+.grafico .pt.ultimo{background:var(--verde)}
 .gx{display:flex;gap:6px;padding:7px var(--imb) var(--imb)}
-.gx span{flex:1;text-align:center;font-size:9.5px;color:var(--fioco);
+.gx{justify-content:space-between}.gx span{flex:1;text-align:center;font-size:9.5px;color:var(--fioco);
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* il mese per mese: intestazione + una riga per mese, colonne allineate */
 .mesi{width:100%;border-collapse:collapse;font-size:13.5px}
@@ -1478,13 +1481,17 @@ function disegnaStat(){
     var s = mesi.slice(-12).filter(function(m){ return nMese(m, periodo) !== null; });
     if(s.length > 1){
       var max = Math.max.apply(null, s.map(function(m){ return nMese(m, periodo) || 0; })) || 1;
-      h += '<div class="tit">Andamento</div><div class="box"><div class="grafico">' +
-        s.map(function(m, i){
-          var val = nMese(m, periodo) || 0;
-          return '<div class="' + (i === s.length - 1 ? 'ora' : '') + '" style="height:' +
-            Math.max(Math.round(val / max * 100), 3) + '%" title="' + esc(m.etichetta) + ': ' +
-            esc(val) + '"></div>'; }).join('') +
-        '</div><div class="gx">' + s.map(function(m){
+      /* una linea con i puntini, non colonne piene: W 100 x H 100 in viewBox, i punti ai bordi hanno 8 di margine */
+      var W = 100, H = 60, n = s.length, px = function(i){ return 6 + i * (W - 12) / (n - 1); },
+          py = function(v){ return 6 + (H - 12) * (1 - v / max); };
+      var punti = s.map(function(m, i){ return { x: px(i), y: py(nMese(m, periodo) || 0), v: nMese(m, periodo) || 0, e: m.etichetta }; });
+      var linea = punti.map(function(p, i){ return (i ? 'L' : 'M') + p.x.toFixed(1) + ' ' + p.y.toFixed(1); }).join(' ');
+      var area = linea + ' L' + punti[punti.length - 1].x.toFixed(1) + ' ' + H + ' L' + punti[0].x.toFixed(1) + ' ' + H + ' Z';
+      h += '<div class="tit">Andamento</div><div class="box"><div class="grafico"><div class="tela">' +
+        '<svg class="linea" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true">' +
+        '<path class="area" d="' + area + '"/><path class="riga" d="' + linea + '"/></svg>' +
+        punti.map(function(p, i){ return '<i class="pt' + (i === n - 1 ? ' ultimo' : '') + '" style="left:' + p.x.toFixed(1) + '%;top:' + (p.y / H * 100).toFixed(1) + '%" title="' + esc(p.e) + ': ' + esc(p.v) + '"></i>'; }).join('') +
+        '</div></div><div class="gx">' + s.map(function(m){
           return '<span>' + esc(String(m.etichetta).split(' ')[0]) + '</span>'; }).join('') +
         '</div></div>';
     }

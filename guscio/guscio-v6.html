@@ -1557,6 +1557,9 @@ function disegnaStat(){
          ' <span class="c">mese in corso</span></div><div class="stat">' + c.join('') + '</div>';
 
     /* --- l andamento mese per mese, UNA linea per ogni misura (v8) --- */
+    var mesiConDati = mesi.slice(-12).length;
+    if(mesiConDati === 1) h += '<div class="autonota" style="margin:12px 2px 0">L\'andamento mese per mese (lezioni, clienti, incasso) parte dal secondo mese: '
+      + 'per adesso c\'\u00e8 solo ' + esc(mesi[mesi.length - 1].etichetta || 'questo mese') + '. Dal mese prossimo qui vedi le tre linee.</div>';
     h += '<div class="grafici">' + MISURE.map(function(x){
       var s = mesi.slice(-12).filter(function(m){ return nMese(m, x[0]) !== null; });
       if(s.length < 2) return '';

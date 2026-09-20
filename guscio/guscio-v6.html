@@ -1911,6 +1911,9 @@ function applicaStato(st){
       if(r.stato !== p.stato || (p.data_pagamento && r.pagata_il !== p.data_pagamento)){
         r.stato = p.stato; if(p.data_pagamento) r.pagata_il = p.data_pagamento; toccato = true;
       }
+      if(p.importo !== undefined && p.importo !== null && Number(r.importo) !== Number(p.importo)){
+        r.importo = Number(p.importo); toccato = true;   /* v9: un acconto lascia la rata aperta col residuo */
+      }
     });
     if(toccato){
       (SOLDI.clienti || []).forEach(function(x){

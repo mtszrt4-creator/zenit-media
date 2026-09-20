@@ -83,6 +83,15 @@ h1,h2,h3{font-family:var(--d);letter-spacing:-.01em}
 button,input,select{font:inherit;color:inherit}
 button{background:none;border:0;cursor:pointer}
 .num{font-variant-numeric:tabular-nums}
+.sc .n,.tes .n{white-space:nowrap}
+/* automazioni (v7) */
+.riga.giu{opacity:.62}
+.riga.giu .t b{text-decoration:line-through;text-decoration-color:var(--spento)}
+.chip.piano{color:var(--spento);border-color:var(--bordo);background:transparent;letter-spacing:.04em}
+.chip.spenta{color:var(--ambra);border-color:var(--a30);background:var(--a12)}
+.autonota{font-size:12.5px;color:var(--spento);margin:6px 0 12px}
+.parola{font-weight:700}
+.riga .t .parola{display:inline;color:var(--bianco)}
 :focus-visible{outline:2px solid var(--verde);outline-offset:2px;border-radius:6px}
 code{font-weight:700;color:var(--verde)}
 
@@ -132,7 +141,7 @@ section[hidden]{display:none}
 /* ---------- tessere ---------- */
 .tessere{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 @media(min-width:560px){.tessere{grid-template-columns:repeat(4,1fr);gap:var(--pass)}}
-@media(max-width:430px){.tes,.sc{padding:11px 10px;min-height:62px;flex-direction:column;align-items:flex-start;gap:3px}.tes .n,.sc .n{font-size:21px}.tes .e,.sc .e{font-size:11.5px}.tondo{margin-left:auto}}
+@media(max-width:430px){.tes,.sc{padding:11px 10px;min-height:62px;flex-direction:column;align-items:flex-start;gap:3px}.tes .n,.sc .n{font-size:21px}.tes .e,.sc .e{font-size:11.5px}#b-guida{margin-left:auto}.sc .n{font-size:clamp(14px,4.4vw,21px)}.sc .d{flex:0 0 auto}}
 .tes,.sc{background:var(--carta);border:1px solid var(--bordo);border-radius:var(--r);
   padding:var(--imb);text-align:left;box-shadow:var(--ombra);min-height:var(--alt-tes);
   display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
@@ -149,6 +158,7 @@ section[hidden]{display:none}
 .box .riga:first-child{border-top:0}
 .riga:active{background:var(--piu)}
 .pallino{width:8px;height:8px;border-radius:99px;flex:0 0 auto}
+.pallino.p-grigio{background:var(--bordo)}
 .p-ok{background:var(--verde)} .p-attesa{background:var(--ambra)}
 .p-oltre{background:var(--rosa)} .p-fermo{background:var(--fioco)}
 .p-muto{background:var(--rosso)}
@@ -439,8 +449,19 @@ html[data-tema="chiaro"] .gr:nth-child(even){background:rgba(0,0,0,.025)}
     <div id="l-clienti"></div>
   </section>
 
+  <!-- ============ AUTOMAZIONI (v7) ============ -->
+  <section id="s-automazioni" hidden>
+    <div class="tit">Le automazioni <span class="c" id="c-auto">0</span></div>
+    <div class="autonota">Quello che faccio per te, ogni giorno. Tocca <b>Spegni</b> per fermarne una:
+      si apre WhatsApp col messaggio pronto, tu mandi e basta. Quelle barrate sono del piano
+      pi&ugrave; alto: le vedi, non partono.</div>
+    <div id="l-auto"></div>
+    <div class="azioni"><button class="btn" type="button" data-sez="messaggi">Vedi i messaggi mandati &rsaquo;</button></div>
+  </section>
+
   <!-- ============ MESSAGGI ============ -->
   <section id="s-messaggi" hidden>
+    <div class="azioni" style="margin:0 0 10px"><button class="btn" type="button" data-sez="automazioni">&lsaquo; Automazioni</button></div>
     <div class="strumenti">
       <label class="cerca">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
@@ -523,6 +544,15 @@ html[data-tema="chiaro"] .gr:nth-child(even){background:rgba(0,0,0,.025)}
         Lo stesso che vedi qui nella pagina Soldi.</span></div></div>
     </div>
 
+    <button class="apri" type="button" aria-expanded="false" data-ap="g-auto">
+      <b>Le automazioni: accendere e spegnere</b><span class="frec">&rsaquo;</span></button>
+    <div class="gl" id="g-auto" hidden>
+      <div class="gr solo"><div><b>Tutto quello che faccio, in una pagina</b>
+        <span>Nella pagina <b>Automazioni</b> vedi ogni cosa che faccio per te: promemoria, avvisi,
+        pagamenti, proposte. Ognuna ha il suo tasto <b>Spegni</b> / <b>Accendi</b>: si apre WhatsApp
+        col messaggio pronto, tu lo mandi e da quel momento quella cosa non parte pi&ugrave;
+        (o riparte). Quelle barrate sono del piano pi&ugrave; alto: se ti servono, scrivici.</span></div></div>
+    </div>
     <button class="apri" type="button" aria-expanded="false" data-ap="g-tel">
       <b>Tienitelo sul telefono</b><span class="frec">&rsaquo;</span></button>
     <div class="gl" id="g-tel" hidden>
@@ -681,9 +711,9 @@ html[data-tema="chiaro"] .gr:nth-child(even){background:rgba(0,0,0,.025)}
   <button role="tab" type="button" data-t="clienti" aria-selected="false">
     <svg viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.3"/><path d="M3 19c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><path d="M16.5 6.2a3 3 0 0 1 0 5.6M18 19c-.3-1.9-1-3.4-2.2-4.4"/></svg>
     Clienti</button>
-  <button role="tab" type="button" data-t="messaggi" aria-selected="false">
-    <svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 1-11.8 7L4 20l1.1-4A8 8 0 1 1 20 12z"/></svg>
-    Messaggi</button>
+  <button role="tab" type="button" data-t="automazioni" aria-selected="false">
+    <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="5"/><circle cx="15.5" cy="12" r="3"/></svg>
+    Automazioni</button>
   <button role="tab" type="button" data-t="stat" aria-selected="false">
     <svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19v-6"/></svg>
     Statistiche</button>
@@ -779,6 +809,7 @@ var VIVE = { MENU:1, MALATTIA:1, CHIUDO:1, RIENTRO:1, RIPRENDI:1, PAUSA:1,
              GESTISCI:1, LEZIONI:1, RINNOVA:1, PROROGA:1, CAMBIA:1, DATI:1,
              ALIAS:1, OBIETTIVO:1, SOSPENDI:1, CHIUDI:1, FERIE:1 };
 VIVE.PAGATO = 1; VIVE.SOLDI = 1; VIVE.RATE = 1;   /* 20/09: i soldi */
+VIVE.SPEGNI = 1; VIVE.ACCENDI = 1;               /* 20/09: le automazioni */
 function viva(cmd){
   return VIVE[(t(cmd).split(/\s+/)[0] || '').toUpperCase()] === 1;
 }
@@ -1098,7 +1129,8 @@ function scheda(c){
   h += voce('Stato', v(c, C.STATO) || 'ATTIVO');
   h += voce('Come paga', v(c, C.PAGA));
   var sl = soldiDi(c);
-  if(sl) h += voce('Pagamenti', sl.testo, sl.semaforo === 'rosso' ? 'no' : (sl.semaforo === 'giallo' ? 'attesa' : 'si'));
+  if(sl) h += voce('Pagamenti', parolaSoldi(sl.semaforo),   /* la parola sola: il dettaglio sta nella pagina Soldi */
+    sl.semaforo === 'rosso' ? 'no' : (sl.semaforo === 'giallo' ? 'attesa' : 'si'));
   h += voce('Lezioni pagate', v(c, C.TOT));
   h += voce('Usate', v(c, C.USATE));
   h += voce('Restano', v(c, C.RES) || (aConsumo(c) ? 'paga a consumo' : ''));
@@ -1114,6 +1146,7 @@ function scheda(c){
   if(p) az.push('<a class="btn pri" target="_blank" rel="noopener" href="https://wa.me/' + p + '">' +
     ico() + 'Scrivi a ' + esc(v(c, C.NOME) || 'lui') + '</a>');
   if(p) az.push('<a class="btn" href="tel:+' + p + '">Chiama</a>');
+  if(sl && p) az.push('<button class="btn" type="button" data-soldi="' + p + '">I suoi pagamenti &rsaquo;</button>');
   if(p && senzaConsenso(c)) az.push('<a class="btn meta" target="_blank" rel="noopener" ' +
     'href="https://wa.me/' + p + '?text=' + encodeURIComponent('Ciao ' + v(c, C.NOME) +
     ', ti scrivo io. Uso un assistente su WhatsApp che manda i promemoria degli allenamenti ' +
@@ -1169,7 +1202,7 @@ function disegnaClienti(){
     var c = o.c, sg = segnale(c), sotto = [v(c, C.PAGA)];
     if(sg.t) sotto.push(sg.t);
     if(v(c, C.PROX)) sotto.push('prossima ' + v(c, C.PROX));
-    return '<button class="riga" type="button" aria-expanded="false" data-ap="c' + o.i + '">' +
+    return '<button class="riga" type="button" aria-expanded="false" data-ap="c' + o.i + '" data-tel="' + esc(telPulito(v(c, C.TEL))) + '">' +
       '<span class="pallino ' + sg.cl + '"></span>' +
       '<span class="t"><b>' + esc(nomeIntero(c)) + '</b><span>' +
       sotto.filter(Boolean).map(esc).join(' &middot; ') + '</span></span>' +
@@ -1181,6 +1214,9 @@ function disegnaClienti(){
 /* ---------- SOLDI ---------- */
 var SOLDI = (D.soldi && typeof D.soldi === 'object') ? D.soldi : null;
 var fSoldi = 'tutti';
+function parolaSoldi(sem){
+  return sem === 'rosso' ? 'In ritardo' : (sem === 'giallo' ? 'In scadenza' : 'In regola');
+}
 function soldiDi(c){
   if(!SOLDI || !Array.isArray(SOLDI.clienti)) return null;
   var tl = telPulito(v(c, C.TEL));
@@ -1208,6 +1244,12 @@ function disegnaSoldi(){
   reso.soldi = 1;
   var t = $('#t-soldi'), el = $('#l-soldi');
   if(senzaDati){ el.innerHTML = vuoto('Dati non ancora arrivati', ''); return; }
+  if(String((D.pt && D.pt.piano) || '').toUpperCase() === 'BASE'){
+    t.innerHTML = '';
+    el.innerHTML = vuoto('I pagamenti sono del piano Completo', 'Rate, promemoria e ricevute ai clienti: se ti servono, scrivici.');
+    $('#c-soldi').textContent = '0';
+    return;
+  }
   if(!SOLDI){
     t.innerHTML = '';
     el.innerHTML = vuoto('Nessun pagamento registrato ancora',
@@ -1238,9 +1280,10 @@ function disegnaSoldi(){
     var az = '';
     if(x.residuo > 0 && x.comando) az += bottoneComando(x.comando, 'Segna pagato', true, true);
     if(x.telefono) az += bottoneComando('SOLDI ' + x.telefono, 'Dettaglio su WhatsApp', true, false);
-    return '<button class="riga" type="button" aria-expanded="false" data-ap="s' + i + '">' +
+    if(x.telefono) az += '<button class="btn" type="button" data-scheda="' + esc(telPulito(x.telefono)) + '">Scheda cliente &rsaquo;</button>';
+    return '<button class="riga" type="button" aria-expanded="false" data-ap="s' + i + '" data-tel="' + esc(telPulito(x.telefono)) + '">' +
       '<span class="pallino p-' + esc(x.semaforo || 'verde') + '"></span>' +
-      '<span class="t"><b>' + esc(x.nome) + '</b><span>' + esc(x.testo || '') + '</span></span>' +
+      '<span class="t"><b>' + esc(x.nome) + '</b><span><span class="parola">' + parolaSoldi(x.semaforo) + '</span>' + (x.testo ? ' \u00b7 ' + esc(x.testo) : '') + '</span></span>' +
       (x.residuo > 0 ? '<span class="chip' + (x.semaforo === 'rosso' ? ' muto' : (x.semaforo === 'giallo' ? ' attesa' : '')) + '">' + esc(euro(x.residuo)) + '</span>' : '<span class="chip ok">ok</span>') +
       '<span class="frec">&rsaquo;</span></button>' +
       '<div class="det" id="s' + i + '" hidden>' +
@@ -1256,6 +1299,57 @@ function disegnaSoldi(){
 function oggiIso(){
   var d = new Date(), p = function(n){ return (n < 10 ? '0' : '') + n; };
   return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+}
+
+/* ---------- AUTOMAZIONI (v7) ---------- */
+/* La lista e nel guscio, lo stato (spente) arriva da CR: D.automazioni.spente e
+   la colonna pt_registry.automazioni_spente. Il piano decide cosa e disponibile.
+   L interruttore e un comando WhatsApp (SPEGNI chiave / ACCENDI chiave), la
+   stessa strada di Segna pagato: nessuna scrittura dalla pagina. */
+var AUTOM = [
+  { k:'promemoria',   p:'BASE',     n:'Promemoria del giorno prima',      d:'Il giorno prima di ogni allenamento scrivo al cliente e gli chiedo se ci sar\u00e0.' },
+  { k:'esaurimento',  p:'BASE',     n:'Lezioni agli sgoccioli',            d:'A tre lezioni dalla fine, e quando finiscono, lo avviso io.' },
+  { k:'compleanni',   p:'BASE',     n:'Auguri di compleanno',              d:'Il giorno del compleanno gli scrivo a nome tuo.' },
+  { k:'disdette',     p:'BASE',     n:'Disdetta: un altro orario',         d:'Quando un cliente non pu\u00f2 venire gli propongo tre alternative.' },
+  { k:'settimana',    p:'COMPLETO', n:'Il sabato fisso la settimana',      d:'Il sabato propongo a ognuno gli allenamenti della settimana dopo.' },
+  { k:'prenotazioni', p:'COMPLETO', n:'Prenotazioni dei clienti',          d:'I clienti prenotano da soli, io controllo la tua agenda.' },
+  { k:'riattivazione',p:'COMPLETO', n:'Riattivazione a due settimane',     d:'Chi non si allena da due settimane riceve un messaggio per riprendere.' },
+  { k:'feedback',     p:'COMPLETO', n:'Feedback dopo la sessione',         d:'Dopo l\'allenamento chiedo com\'\u00e8 andata; se qualcuno non \u00e8 contento te lo dico.' },
+  { k:'checkin',      p:'COMPLETO', n:'Check-in del luned\u00ec',            d:'Il luned\u00ec mando l\'obiettivo della settimana a chi lo vuole.' },
+  { k:'buchi',        p:'COMPLETO', n:'Buchi in agenda',                   d:'Se domani hai un buco lo propongo a chi pu\u00f2 riempirlo.' },
+  { k:'pagamenti',    p:'COMPLETO', n:'Pagamenti: promemoria e ricevute',  d:'Ricordo le rate tre giorni prima e mando la ricevuta a chi paga.' },
+  { k:'slot',         p:'PRO',      n:'Slot liberato, riempito',           d:'Quando si libera un posto lo offro subito a chi lo aspettava.' },
+  { k:'sparendo',     p:'PRO',      n:'Clienti che stanno sparendo',       d:'Ti segnalo chi sta diradando prima che sparisca.' },
+  { k:'passaparola',  p:'PRO',      n:'Passaparola',                       d:'Chiedo ai clienti soddisfatti di presentarti a qualcuno.' },
+  { k:'ferie',        p:'PRO',      n:'Ferie in un messaggio',             d:'Quando chiudi, avviso tutti e propongo a ognuno di rifissare.' },
+  { k:'ottimizzazione',p:'PRO',     n:'Ottimizzazione della settimana',    d:'La domenica ti propongo come compattare la settimana.' },
+  { k:'report',       p:'PRO',      n:'Report mensile con incassi',        d:'A fine mese il tuo mese in numeri, incassi compresi.' }
+];
+var PIANI = { BASE:0, COMPLETO:1, PRO:2 };
+var AUTO = (D.automazioni && typeof D.automazioni === 'object') ? D.automazioni : {};
+function disegnaAuto(){
+  reso.automazioni = 1;
+  var el = $('#l-auto');
+  var pianoPT = String((D.pt && D.pt.piano) || 'BASE').toUpperCase();
+  var mio = PIANI[pianoPT] === undefined ? 0 : PIANI[pianoPT];
+  var spente = Array.isArray(AUTO.spente) ? AUTO.spente : String(AUTO.spente || '').split(',').map(function(x){ return x.trim(); }).filter(Boolean);
+  var nAttive = 0;
+  var righe = AUTOM.map(function(a, i){
+    var nel = PIANI[a.p] <= mio, giu = spente.indexOf(a.k) > -1;
+    if(nel && !giu) nAttive++;
+    var pall = !nel ? 'p-grigio' : (giu ? 'p-giallo' : 'p-verde');
+    var chip = !nel ? '<span class="chip piano">' + (a.p === 'PRO' ? 'PRO' : 'Completo') + '</span>'
+             : (giu ? '<span class="chip spenta">spenta</span>' : '<span class="chip ok">attiva</span>');
+    var az = nel ? bottoneComando((giu ? 'ACCENDI ' : 'SPEGNI ') + a.k, giu ? 'Accendi' : 'Spegni', true, !giu)
+                 : '<span class="autonota" style="margin:0">Nel piano ' + (a.p === 'PRO' ? 'PRO' : 'Completo') + ': se ti serve, scrivici.</span>';
+    return '<button class="riga' + (nel ? '' : ' giu') + '" type="button" aria-expanded="false" data-ap="a' + i + '">' +
+      '<span class="pallino ' + pall + '"></span>' +
+      '<span class="t"><b>' + esc(a.n) + '</b><span>' + esc(a.d) + '</span></span>' + chip +
+      '<span class="frec">&rsaquo;</span></button>' +
+      '<div class="det" id="a' + i + '" hidden><div class="azioni">' + az + '</div></div>';
+  }).join('');
+  $('#c-auto').textContent = nAttive + ' attive';
+  el.innerHTML = '<div class="box">' + righe + '</div>';
 }
 
 /* ---------- MESSAGGI ---------- */
@@ -1567,7 +1661,7 @@ $('#b-installa').addEventListener('click', function(){ apriInstalla(true); });
 })();
 
 /* ---------- navigazione ---------- */
-var SEZ = ['oggi','clienti','messaggi','stat','soldi','altro'];
+var SEZ = ['oggi','clienti','automazioni','messaggi','stat','soldi','altro'];
 var reso = {};
 function assicura(nome){
   if(reso[nome]) return;
@@ -1576,6 +1670,18 @@ function assicura(nome){
   else if(nome === 'messaggi') disegnaMessaggi();
   else if(nome === 'stat')     caricaStat();
   else if(nome === 'soldi')    disegnaSoldi();
+  else if(nome === 'automazioni') disegnaAuto();
+}
+function apriRigaTel(sez, lista, tel){
+  vai(sez);
+  var r = document.querySelector(lista + ' .riga[data-tel="' + tel + '"]'); if(!r) return;
+  var d = document.getElementById(r.getAttribute('data-ap'));
+  var box = r.closest('.box');
+  if(box) Array.prototype.forEach.call(box.querySelectorAll('[data-ap]'), function(x){
+    x.setAttribute('aria-expanded', 'false');
+    var y = document.getElementById(x.getAttribute('data-ap')); if(y) y.hidden = true; });
+  r.setAttribute('aria-expanded', 'true'); if(d) d.hidden = false;
+  if(r.scrollIntoView) r.scrollIntoView({ block:'center' });
 }
 function vai(nome){
   if(SEZ.indexOf(nome) === -1) nome = 'oggi';
@@ -1649,6 +1755,12 @@ document.addEventListener('click', function(e){
     if(navigator.clipboard) navigator.clipboard.writeText(s).then(fine, fine); else fine();
     return;
   }
+  var sz = e.target.closest('[data-sez]');
+  if(sz){ vai(sz.getAttribute('data-sez')); window.scrollTo(0, 0); return; }
+  var sTel = e.target.closest('[data-soldi]');
+  if(sTel){ apriRigaTel('soldi', '#l-soldi', sTel.getAttribute('data-soldi')); return; }
+  var cTel = e.target.closest('[data-scheda]');
+  if(cTel){ fCli = 'tutti'; qCli = ''; $('#q').value = ''; aggiornaPill(); disegnaClienti(); apriRigaTel('clienti', '#l-clienti', cTel.getAttribute('data-scheda')); return; }
   var salto = e.target.closest('[data-vai]');
   if(salto){
     var i = salto.getAttribute('data-vai');

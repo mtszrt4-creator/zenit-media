@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="it" data-tema="scuro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark light">
+<title>Zenit</title>
+<meta name="theme-color" content="#08090b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Zenit">
+<link rel="manifest" id="zp-mf">
+<script>(function(){var m=location.pathname.match(/^\/c\/([a-z0-9-]{3,80})$/);window.ZP_SLUG=m?m[1]:'';if(m){var l=document.getElementById('zp-mf');if(l)l.href='/manifest.webmanifest?s='+m[1];}try{var t=localStorage.getItem('zp-tema');if(t)document.documentElement.setAttribute('data-tema',t);}catch(e){}if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js');})();</script>
+<link rel="icon" href="/icona.png" type="image/png">
+<link rel="apple-touch-icon" href="/icona.png">
+
+<!-- Nessun font da scaricare: si usa quello di sistema. Un carattere che
+     arriva dalla rete costa una richiesta e un ridisegno, e in palestra
+     la rete e lenta. -->
+
+<style>
+/* ============================================================
+   TEMA E MISURE - una scala sola per tutta la pagina.
+   Chi tocca questo file cambia i valori QUI e non dentro le
+   regole: raggio, spessore, altezze e passi stanno tutti in
+   variabili, ed e il motivo per cui i riquadri di due pagine
+   diverse non possono piu venire di due misure diverse.
+
+   NIENTE ANIMAZIONI DI SFONDO, NIENTE backdrop-filter.
+   Erano tre livelli fissi grandi come lo schermo che si
+   muovevano sempre, piu due sfocature che leggevano
+   attraverso di loro: ogni cambio di pagina ridisegnava
+   tutto. Lo sfondo adesso e un velo fermo, dipinto una
+   volta. Se un giorno si rimette del movimento, va su
+   transform/opacity di un elemento PICCOLO, mai a schermo
+   intero.
+   ============================================================ */
+:root{
+  /* superfici: quattro gradini, non uno */
+  --nero:#08090b; --carta:#14161b; --alto:#1a1d24; --piu:#242935;
+  --bordo:rgba(255,255,255,.14); --bordo2:rgba(255,255,255,.26);
+  --sep:rgba(255,255,255,.10);
+  --bianco:#f5f6f8; --testo:#dfe2e8; --spento:#b2b8c4; --fioco:#8d94a2;
+  --verde:#00e571; --v08:rgba(0,229,113,.12); --v22:rgba(0,229,113,.24);
+  --v40:rgba(0,229,113,.44);
+  --ambra:#ffb02e; --a12:rgba(255,176,46,.15); --a30:rgba(255,176,46,.38);
+  --rosso:#ff6b6b; --r12:rgba(255,107,107,.15); --r30:rgba(255,107,107,.38);
+  --rosa:#f78ac2; --p12:rgba(247,138,194,.15); --p30:rgba(247,138,194,.38);
+  --c:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  --d:var(--c);
+  --ombra:0 1px 0 rgba(255,255,255,.03) inset, 0 2px 10px rgba(0,0,0,.35);
+  --g1:rgba(0,229,113,.13);
+  /* LA SCALA: raggio, passo, imbottitura, altezze */
+  --r:14px; --r2:10px; --pass:10px; --imb:14px;
+  --alt-riga:58px; --alt-tes:70px; --alt-btn:44px; --alt-pill:38px;
+}
+html[data-tema="chiaro"]{
+  --nero:#f1f3f6; --carta:#ffffff; --alto:#f7f8fa; --piu:#e9ecf1;
+  --bordo:rgba(0,0,0,.14); --bordo2:rgba(0,0,0,.26); --sep:rgba(0,0,0,.09);
+  --bianco:#0f1116; --testo:#1c1f26; --spento:#535a68; --fioco:#69707e;
+  --verde:#00994d; --v08:rgba(0,153,77,.10); --v22:rgba(0,153,77,.20);
+  --v40:rgba(0,153,77,.42);
+  --ambra:#a86200; --a12:rgba(168,98,0,.12); --a30:rgba(168,98,0,.34);
+  --rosso:#c02626; --r12:rgba(192,38,38,.10); --r30:rgba(192,38,38,.32);
+  --rosa:#a83070; --p12:rgba(168,48,112,.10); --p30:rgba(168,48,112,.32);
+  --ombra:0 1px 2px rgba(0,0,0,.05), 0 3px 10px rgba(0,0,0,.07);
+  --g1:rgba(0,153,77,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;background:var(--nero)}
+body{font-family:var(--c);background:transparent;color:var(--testo);font-size:15px;
+  line-height:1.45;-webkit-font-smoothing:antialiased;position:relative;
+  padding-bottom:calc(74px + env(safe-area-inset-bottom))}
+/* il velo verde: FERMO, alto quanto la prima schermata, e scorre via */
+body::before{content:"";position:absolute;top:0;left:0;right:0;height:300px;z-index:0;
+  pointer-events:none;
+  background:radial-gradient(130% 100% at 12% 0%,var(--g1),transparent 68%)}
+main,.pie{position:relative;z-index:1}
+h1,h2,h3{font-family:var(--d);letter-spacing:-.01em}
+button,input,select{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+.num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--verde);outline-offset:2px;border-radius:6px}
+code{font-weight:700;color:var(--verde)}
+
+/* ---------- testata ---------- */
+/* opaca: sopra ci passa il contenuto che scorre, e una barra che sfoca
+   quello che le passa sotto costa un ridisegno a ogni pixel di scroll */
+.testa{position:sticky;top:0;z-index:30;background:var(--nero);
+  border-bottom:1px solid var(--sep);
+  padding:calc(10px + env(safe-area-inset-top)) var(--imb) 10px}
+.testa-r{display:flex;align-items:center;gap:9px}
+.segno{flex:0 0 auto;color:var(--bianco)}
+.nome{font-family:var(--d);font-weight:700;font-size:16px;color:var(--bianco);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.piano{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--verde);border:1px solid var(--v40);background:var(--v08);
+  padding:2px 7px;border-radius:99px;flex:0 0 auto;white-space:nowrap}
+.tondo{width:38px;height:38px;border-radius:var(--r2);display:grid;place-items:center;
+  background:var(--carta);border:1px solid var(--bordo);flex:0 0 auto;color:var(--spento)}
+.tondo:active{background:var(--piu)}
+.tondo svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round}
+.ora{margin-left:auto;font-size:11px;color:var(--fioco);white-space:nowrap}
+
+main{padding:var(--imb);max-width:900px;margin:0 auto}
+section[hidden]{display:none}
+/* ogni pagina comincia con lo stesso passo: il titolo ha sempre gli stessi
+   margini, ed e meta del perche i riquadri sembravano di misure diverse */
+.tit{font-family:var(--d);font-weight:700;font-size:12.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--fioco);margin:18px 2px 8px;display:flex;
+  align-items:center;gap:8px;flex-wrap:wrap}
+.tit:first-child{margin-top:0}
+.tit .c{font-size:11px;color:var(--spento);background:var(--carta);
+  border:1px solid var(--bordo);border-radius:99px;padding:1px 7px;text-transform:none;
+  letter-spacing:0}
+.box{background:var(--carta);border:1px solid var(--bordo);border-radius:var(--r);
+  box-shadow:var(--ombra);overflow:hidden}
+.box + .box{margin-top:var(--pass)}
+.vuoto{padding:24px var(--imb);text-align:center;color:var(--spento);font-size:14px}
+.vuoto b{display:block;color:var(--bianco);font-family:var(--d);font-size:15px;margin-bottom:5px}
+
+.avviso{border-radius:var(--r);padding:12px var(--imb);font-size:13.5px;margin-bottom:12px;
+  background:var(--a12);border:1px solid var(--a30);color:var(--testo)}
+.avviso b{color:var(--ambra)}
+.avviso.grave{background:var(--r12);border-color:var(--r30)}
+.avviso.grave b{color:var(--rosso)}
+
+/* ---------- tessere ---------- */
+.tessere{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(min-width:560px){.tessere{grid-template-columns:repeat(4,1fr);gap:var(--pass)}}
+@media(max-width:430px){.tes,.sc{padding:11px 10px;min-height:62px;flex-direction:column;align-items:flex-start;gap:3px}.tes .n,.sc .n{font-size:21px}.tes .e,.sc .e{font-size:11.5px}.tondo{margin-left:auto}}
+.tes,.sc{background:var(--carta);border:1px solid var(--bordo);border-radius:var(--r);
+  padding:var(--imb);text-align:left;box-shadow:var(--ombra);min-height:var(--alt-tes);
+  display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.tes[aria-pressed="true"]{border-color:var(--v40);background:var(--v08)}
+.tes .n,.sc .n{font-family:var(--d);font-weight:700;font-size:24px;color:var(--bianco);line-height:1.05}
+.tes .e,.sc .e{font-size:12px;color:var(--spento);line-height:1.3;flex:1 1 auto;min-width:0}
+.tes.crit .n,.sc.crit .n{color:var(--ambra)}
+.tes.male .n,.sc.male .n{color:var(--rosso)}
+
+/* ---------- righe ---------- */
+.riga{display:flex;align-items:center;gap:10px;width:100%;padding:12px var(--imb);
+  text-align:left;border:none;border-top:1px solid var(--sep);min-height:var(--alt-riga);
+  background:var(--carta);color:inherit}
+.box .riga:first-child{border-top:0}
+.riga:active{background:var(--piu)}
+.pallino{width:8px;height:8px;border-radius:99px;flex:0 0 auto}
+.p-ok{background:var(--verde)} .p-attesa{background:var(--ambra)}
+.p-oltre{background:var(--rosa)} .p-fermo{background:var(--fioco)}
+.p-muto{background:var(--rosso)}
+.pALTA{background:var(--rosso);box-shadow:0 0 0 3px var(--r12)}
+.pMEDIA{background:var(--ambra);box-shadow:0 0 0 3px var(--a12)}
+.pBASSA{background:var(--verde);box-shadow:0 0 0 3px var(--v08)}
+.riga .t{flex:1;min-width:0}
+.riga .t b{display:block;font-weight:600;color:var(--bianco);font-size:15px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.riga .t span{display:block;font-size:12.5px;color:var(--spento);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.riga .frec{color:var(--fioco);transition:transform .15s;flex:0 0 auto}
+.riga[aria-expanded="true"] .frec{transform:rotate(90deg);color:var(--verde)}
+.chip{font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;
+  border:1px solid var(--bordo2);color:var(--spento);white-space:nowrap;flex:0 0 auto}
+.chip.ok{color:var(--verde);border-color:var(--v40);background:var(--v08)}
+.chip.attesa{color:var(--ambra);border-color:var(--a30);background:var(--a12)}
+.chip.oltre{color:var(--rosa);border-color:var(--p30);background:var(--p12)}
+.chip.muto{color:var(--rosso);border-color:var(--r30);background:var(--r12)}
+.det{padding:0 var(--imb) var(--imb);border-top:1px solid var(--sep);background:var(--alto)}
+.det[hidden]{display:none}
+.det p{font-size:14px;color:var(--testo);margin:12px 0 0;white-space:pre-line}
+
+.voci{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--sep);
+  border:1px solid var(--sep);border-radius:var(--r2);overflow:hidden;margin-top:12px}
+.voci>div{background:var(--carta);padding:9px 11px;min-width:0}
+.voci>div:last-child:nth-child(odd){grid-column:1/-1}
+.voci .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--fioco)}
+.voci .v{font-size:14px;color:var(--bianco);word-break:break-word}
+.voci .v.no{color:var(--rosso);font-weight:600}
+.voci .v.si{color:var(--verde)}
+.voci .v.attesa{color:var(--ambra);font-weight:600}
+/* ---------- soldi ---------- */
+.p-giallo{background:var(--ambra)} .p-verde{background:var(--verde)} .p-rosso{background:var(--rosso)}
+.rate{display:grid;gap:6px;margin:8px 0 12px}
+.rata{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--spento)}
+.rata b{color:var(--bianco);font-weight:600;min-width:64px}
+.rata .st{margin-left:auto;font-size:12px}
+.rata.pagata .st{color:var(--verde)} .rata.ritardo .st{color:var(--rosso);font-weight:600} .rata.attesa .st{color:var(--ambra)}
+.voci .v.spenta{color:var(--fioco)}
+
+/* ---------- bottoni ---------- */
+.azioni{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn{flex:1 1 auto;min-height:var(--alt-btn);padding:0 14px;border-radius:12px;font-weight:600;
+  font-size:14px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  border:1px solid var(--bordo2);background:var(--piu);color:var(--bianco);
+  text-decoration:none;text-align:center}
+.btn:active{opacity:.75}
+.btn.pri{background:var(--verde);border-color:var(--verde);color:#062012}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+.btn em{font-style:normal;font-weight:400;font-size:11.5px;color:var(--fioco);
+  border-left:1px solid var(--bordo2);padding-left:7px}
+.cmdcli{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.cmdcli .btn{flex:0 0 auto;min-height:36px;font-size:12px;padding:0 10px;border-radius:9px}
+.cmdcli .btn svg{width:13px;height:13px}
+.cmdbar{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px;
+  scrollbar-width:none}
+.cmdbar::-webkit-scrollbar{display:none}
+.cmdbar .btn{flex:0 0 auto;min-height:var(--alt-pill);font-size:13px;padding:0 12px}
+
+/* ---------- filtri ---------- */
+.strumenti{display:flex;gap:8px;margin-bottom:var(--pass)}
+.cerca{flex:1;display:flex;align-items:center;gap:8px;background:var(--carta);
+  border:1px solid var(--bordo);border-radius:12px;padding:0 12px;min-height:var(--alt-btn)}
+.cerca input{flex:1;background:none;border:0;outline:none;font-size:15px;min-width:0}
+.cerca svg{width:16px;height:16px;stroke:var(--fioco);fill:none;stroke-width:2;flex:0 0 auto}
+.pills{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin-bottom:var(--pass);
+  scrollbar-width:none}
+.pills::-webkit-scrollbar{display:none}
+.pills:empty{display:none;margin:0}
+.pill{flex:0 0 auto;font-size:13px;font-weight:500;padding:7px 13px;border-radius:99px;
+  border:1px solid var(--bordo);background:var(--carta);color:var(--spento);
+  min-height:var(--alt-pill)}
+.pill[aria-pressed="true"]{background:var(--v08);border-color:var(--v40);color:var(--verde)}
+select.ord{background:var(--carta);border:1px solid var(--bordo);border-radius:12px;
+  padding:0 10px;min-height:var(--alt-btn);font-size:14px;color:var(--spento);flex:0 1 auto;min-width:0;max-width:44%}
+.strumenti>*{min-width:0}
+
+/* ---------- statistiche ---------- */
+.stat{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--pass)}
+@media(min-width:560px){.stat{grid-template-columns:repeat(3,1fr)}}
+.sc .d{font-size:11.5px;color:var(--fioco);flex:1 0 100%}
+.sc .d.su{color:var(--verde)} .sc .d.giu{color:var(--rosso)}
+.grafico{display:flex;align-items:flex-end;gap:6px;height:120px;padding:var(--imb) var(--imb) 0}
+.grafico div{flex:1;background:var(--v22);border:1px solid var(--v40);
+  border-radius:5px 5px 0 0;min-height:3px}
+.grafico div.ora{background:var(--verde);border-color:var(--verde)}
+.gx{display:flex;gap:6px;padding:7px var(--imb) var(--imb)}
+.gx span{flex:1;text-align:center;font-size:9.5px;color:var(--fioco);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* il mese per mese: intestazione + una riga per mese, colonne allineate */
+.mesi{width:100%;border-collapse:collapse;font-size:13.5px}
+.mesi th{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--fioco);
+  font-weight:600;text-align:right;padding:10px var(--imb) 8px;border-bottom:1px solid var(--sep)}
+.mesi th:first-child{text-align:left}
+.mesi td{padding:11px var(--imb);border-top:1px solid var(--sep);text-align:right;
+  color:var(--testo)}
+.mesi td:first-child{text-align:left;color:var(--bianco);font-weight:600;white-space:nowrap}
+.mesi tr:nth-child(even) td{background:rgba(255,255,255,.022)}
+html[data-tema="chiaro"] .mesi tr:nth-child(even) td{background:rgba(0,0,0,.022)}
+.mesi .pic{color:var(--fioco)}
+@media(max-width:430px){
+  .mesi th,.mesi td{padding-left:10px;padding-right:10px;font-size:12.5px}
+  .mesi .pic{display:block;font-size:11px}
+}
+.nota{color:var(--fioco);font-size:12px;padding:10px 2px 0;line-height:1.5}
+
+/* ---------- stasera: cosa ha fatto l assistente nell ultimo giro ---------- */
+.stasera{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-top:var(--pass);
+  padding:11px 12px;background:var(--carta);border:1px solid var(--bordo);border-radius:var(--r);
+  font-size:13px;color:var(--spento);box-shadow:var(--ombra)}
+.stasera .k{flex:1 0 100%;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--fioco);font-weight:700}
+.stasera b{color:var(--bianco);font-family:var(--d);font-size:15px;margin-right:3px}
+.stasera .ko b{color:var(--rosso)}
+
+/* ---------- da fare raggruppato: piu cose sullo stesso cliente ---------- */
+.det .voce{border-top:1px solid var(--sep);padding-top:2px;margin-top:12px}
+.det .voce:first-child{border-top:0;margin-top:0;padding-top:0}
+.det .voce h4{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;
+  color:var(--bianco);margin:12px 0 0;font-family:var(--d)}
+.det .voce h4 .pallino{width:7px;height:7px;box-shadow:none}
+.riga .t .altre{font-style:normal;color:var(--verde);font-weight:600}
+
+/* ---------- foglio di installazione ---------- */
+.velo{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.6);display:flex;
+  align-items:flex-end;justify-content:center}
+.foglio{width:100%;max-width:560px;background:var(--carta);border:1px solid var(--bordo);
+  border-radius:var(--r) var(--r) 0 0;padding:18px var(--imb) calc(16px + env(safe-area-inset-bottom));
+  box-shadow:0 -6px 30px rgba(0,0,0,.4)}
+.foglio h3{font-family:var(--d);font-size:17px;color:var(--bianco);margin-bottom:4px}
+.foglio .sotto{font-size:13.5px;color:var(--spento);margin-bottom:12px;line-height:1.5}
+.foglio ol{list-style:none;counter-reset:p;display:grid;gap:8px;margin:0 0 14px}
+.foglio li{counter-increment:p;display:grid;grid-template-columns:26px 1fr;gap:10px;
+  align-items:center;font-size:14px;color:var(--testo);line-height:1.45}
+.foglio li::before{content:counter(p);width:26px;height:26px;border-radius:99px;
+  background:var(--v08);border:1px solid var(--v40);color:var(--verde);font-weight:700;
+  font-size:12px;display:grid;place-items:center}
+.foglio li svg{width:18px;height:18px;vertical-align:-4px;stroke:var(--bianco);fill:none;
+  stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;margin:0 2px}
+.foglio .azioni{margin-top:4px}
+@media(min-width:900px){
+  .velo{align-items:center}
+  .foglio{border-radius:var(--r);padding-bottom:18px}
+}
+
+/* ---------- guida ---------- */
+/* Prima era un blocco unico di celle nere attaccate. Adesso: i blocchi sono
+   staccati dal passo della pagina, dentro ogni riga ha un separatore e le
+   righe pari sono appena piu chiare. Il testo e --testo, non --spento:
+   una guida si legge, non si scorre. */
+.gl{background:var(--carta);border:1px solid var(--bordo);border-radius:var(--r);
+  overflow:hidden;box-shadow:var(--ombra)}
+.gl + .apri,.gl + .gl{margin-top:var(--pass)}
+.gl.agire{border-left:3px solid var(--verde)}
+.gr{padding:13px var(--imb);border-top:1px solid var(--sep);display:grid;
+  grid-template-columns:16px 1fr;gap:11px;align-items:start}
+.gl .gr:first-child{border-top:0}
+.gr:nth-child(even){background:rgba(255,255,255,.025)}
+html[data-tema="chiaro"] .gr:nth-child(even){background:rgba(0,0,0,.025)}
+.gr.solo{grid-template-columns:1fr}
+.gr b{display:block;color:var(--bianco);font-weight:700;font-size:14.5px;margin-bottom:4px}
+.gr span{display:block;color:var(--testo);font-size:13.5px;line-height:1.55}
+.gr span b{display:inline;color:var(--bianco);font-size:inherit;margin:0}
+.gr span.spenta{color:var(--fioco);font-style:italic}
+.pall2{width:14px;height:14px;border-radius:4px;display:block;margin-top:3px}
+.apri{width:100%;display:flex;align-items:center;gap:9px;padding:13px var(--imb);
+  text-align:left;background:var(--carta);border:1px solid var(--bordo);
+  border-radius:var(--r);box-shadow:var(--ombra);min-height:52px;margin-top:var(--pass)}
+.apri b{flex:1;font-family:var(--d);font-weight:700;font-size:15px;color:var(--bianco)}
+.apri .frec{color:var(--fioco);transition:transform .15s}
+.apri[aria-expanded="true"]{border-bottom-left-radius:0;border-bottom-right-radius:0;
+  background:var(--alto)}
+.apri[aria-expanded="true"] .frec{transform:rotate(90deg);color:var(--verde)}
+.apri[aria-expanded="true"] + .gl{margin-top:0;border-top:0;
+  border-top-left-radius:0;border-top-right-radius:0}
+
+/* ---------- barra ---------- */
+.barra{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;
+  grid-template-columns:repeat(5,1fr);background:var(--carta);
+  border-top:1px solid var(--bordo);padding-bottom:env(safe-area-inset-bottom)}
+.barra button{padding:9px 2px 8px;display:flex;flex-direction:column;align-items:center;
+  gap:3px;color:var(--fioco);font-size:10px;font-weight:600;min-height:58px}
+.barra button svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.barra button[aria-selected="true"]{color:var(--verde)}
+.barra button span.w{position:relative}
+.bollo{position:absolute;transform:translate(10px,-10px);min-width:16px;height:16px;
+  border-radius:99px;background:var(--rosso);color:#fff;font-size:10px;font-weight:700;
+  display:grid;place-items:center;padding:0 4px}
+.letto{display:flex;align-items:center;gap:8px;margin-top:var(--pass);padding:11px 12px;
+  background:var(--carta);border:1px solid var(--bordo);border-radius:var(--r);
+  font-size:12.5px;color:var(--spento)}
+.letto i{width:7px;height:7px;border-radius:99px;background:var(--verde);flex:0 0 auto}
+.letto b{color:var(--bianco);font-weight:600}
+@media(max-width:430px){.ora{display:none}}
+.pie{text-align:center;color:var(--fioco);font-size:11.5px;padding:24px var(--imb) 6px;line-height:1.6}
+
+/* ---------- schermo largo: il binario a sinistra, non la barra sotto ----------
+   Sul telefono la barra sta sotto il pollice. Su un computer la stessa barra
+   in fondo a una colonna stretta e uno spreco: la navigazione va a sinistra,
+   il contenuto si allarga e le tessere stanno su una riga sola. */
+@media(min-width:900px){
+  body{padding-bottom:32px;padding-left:96px}
+  .barra{top:0;bottom:0;right:auto;width:96px;grid-template-columns:1fr;
+    grid-auto-rows:max-content;align-content:start;gap:4px;
+    padding:76px 8px 0;border-top:0;border-right:1px solid var(--bordo)}
+  .barra button{min-height:64px;border-radius:var(--r2);font-size:11px}
+  .barra button[aria-selected="true"]{background:var(--v08)}
+  .testa{padding-left:24px;padding-right:24px}
+  main{max-width:1040px;padding:20px 24px}
+  .tessere{grid-template-columns:repeat(6,1fr)}
+  .stat{grid-template-columns:repeat(4,1fr)}
+  .riga{padding-left:18px;padding-right:18px}
+  .det{padding-left:18px;padding-right:18px}
+  .voci{grid-template-columns:repeat(4,1fr)}
+  .pie{padding-top:36px}
+}
+/* sul telefono anche le schede delle statistiche stanno in tre: sta qui in
+   coda perche la regola base di .stat viene dopo quella delle tessere */
+@media(max-width:430px){.stat{grid-template-columns:repeat(3,1fr);gap:8px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{
+  .barra,.testa .tondo,.strumenti,.pills,.cmdbar,.azioni,.cmdcli,.frec{display:none!important}
+  body{background:#fff;color:#000;padding:0}
+  body::before{display:none}
+  section[hidden]{display:block!important}
+  .det{display:block!important}
+  .box,.gl{break-inside:avoid;border-color:#ccc;box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<header class="testa">
+  <div class="testa-r">
+    <svg class="segno" viewBox="0 0 64 64" width="24" height="24" role="img" aria-label="ZenitPT">
+      <path d="M12 44 L32 24 L52 44" fill="none" stroke="currentColor" stroke-width="6.5"
+            stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="32" cy="11" r="5.2" fill="#00e571"/></svg>
+    <span class="nome" id="h-nome">Cruscotto</span>
+    <span class="piano" id="h-piano" hidden></span>
+    <span class="ora" id="h-ora"></span>
+    <button class="tondo" id="b-guida" title="Guida" aria-label="Apri la guida">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.2 9.3a2.8 2.8 0 1 1 3.6 2.7c-.5.2-.8.7-.8 1.2v.6M12 17h.01"/></svg>
+    </button>
+    <button class="tondo" id="b-tema" title="Chiaro / scuro" aria-label="Cambia contrasto">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <div id="avvisi"></div>
+
+  <!-- ============ OGGI ============ -->
+  <section id="s-oggi">
+    <div class="cmdbar" id="cmdbar"></div>
+    <div class="tessere" id="t-oggi"></div>
+    <div class="stasera" id="stasera" hidden></div>
+    <div class="letto" id="letto" hidden></div>
+    <div class="tit">Da fare <span class="c" id="c-fare">0</span></div>
+    <div class="strumenti">
+      <label class="cerca">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="qf" type="search" placeholder="Cerca fra le cose da fare" autocomplete="off">
+      </label>
+    </div>
+    <div id="l-fare"></div>
+  </section>
+
+  <!-- ============ CLIENTI ============ -->
+  <section id="s-clienti" hidden>
+    <div class="strumenti">
+      <label class="cerca">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Cerca nome, numero, compagno" autocomplete="off">
+      </label>
+      <select class="ord" id="ord" aria-label="Ordina i clienti">
+        <option value="urg">Chi ha bisogno</option>
+        <option value="nome">Nome</option>
+        <option value="residue">Lezioni che restano</option>
+      </select>
+    </div>
+    <div class="pills" id="p-clienti"></div>
+    <div class="tit">Clienti <span class="c" id="c-cli">0</span></div>
+    <div id="l-clienti"></div>
+  </section>
+
+  <!-- ============ MESSAGGI ============ -->
+  <section id="s-messaggi" hidden>
+    <div class="strumenti">
+      <label class="cerca">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="qm" type="search" placeholder="Cerca un cliente o un tipo" autocomplete="off">
+      </label>
+    </div>
+    <div class="pills" id="p-msg"></div>
+    <div class="tit">Messaggi <span class="c" id="c-msg">0</span></div>
+    <div id="l-messaggi"></div>
+  </section>
+
+  <!-- ============ STATISTICHE ============ -->
+  <section id="s-stat" hidden>
+    <div class="pills" id="p-stat"></div>
+    <div id="l-stat"></div>
+  </section>
+
+  <!-- ============ SOLDI ============ -->
+  <section id="s-soldi" hidden>
+    <div class="tessere" id="t-soldi"></div>
+    <div class="pills" id="p-soldi"></div>
+    <div class="tit">Clienti <span class="c" id="c-soldi">0</span></div>
+    <div id="l-soldi"></div>
+    <div class="nota">Quando incassi, tocca <b>Segna pagato</b> accanto al cliente: si apre WhatsApp col
+      messaggio gi&agrave; scritto, tu mandi e basta. Oppure scrivi al tuo assistente
+      <code>PAGATO</code> e il nome. A rate: <code>RATE</code>, il nome e quante (es. <code>RATE Marco 3</code>).
+      Le rate in scadenza gliele ricordo io, tre giorni prima.</div>
+  </section>
+
+  <!-- ============ GUIDA: come funziona, comandi, profilo ============ -->
+  <section id="s-altro" hidden>
+    <div class="tit">Come funziona</div>
+    <div class="gl">
+      <div class="gr solo"><div><b>Il calendario ha sempre ragione</b>
+        <span>Tu continui a segnare gli allenamenti l&igrave; come hai sempre fatto. Ogni sera
+        li leggo, aggiorno i conteggi e riscrivo questa pagina. Se un numero non torna,
+        aggiungi l&rsquo;allenamento sul calendario: stasera si sistema da solo.</span></div></div>
+    </div>
+
+    <button class="apri" type="button" aria-expanded="false" data-ap="g-cal">
+      <b>Come segnare gli allenamenti</b><span class="frec">&rsaquo;</span></button>
+    <div class="gl" id="g-cal" hidden>
+      <div class="gr solo"><div><b>Il calendario nuovo</b>
+        <span>Nel tuo Google Calendar trovi un calendario in pi&ugrave;,
+        <b>Assistente ZenitPT</b>. Gli allenamenti vanno segnati l&igrave;.</span></div></div>
+      <div class="gr solo"><div><b>Nel titolo, nome e cognome</b>
+        <span>Scritti come stanno nella scheda clienti. &Egrave; cos&igrave; che riconosco
+        di chi &egrave; la lezione.</span></div></div>
+      <div class="gr solo"><div><b>Nella descrizione, il telefono</b>
+        <span>Se puoi, mettici il suo numero: mi serve quando il nome da solo
+        non basta.</span></div></div>
+      <div class="gr solo"><div><b>Due clienti insieme</b>
+        <span>Scrivi tutti e due i nomi nel titolo: scalo <b>una lezione a
+        testa</b>.</span></div></div>
+      <div class="gr solo"><div><b>Una disdetta normale</b>
+        <span>Cancella l&rsquo;evento. <b>Cancellato = non contato.</b>
+        Se invece ha disdetto all&rsquo;ultimo e la lezione va contata lo stesso,
+        non cancellarlo: coloralo di rosso.</span></div></div>
+      <div class="gr solo"><div><b>Se sposti un allenamento</b>
+        <span>Il promemoria si sposta da solo. Non devi avvisare nessuno.</span></div></div>
+    </div>
+
+    <button class="apri" type="button" aria-expanded="false" data-ap="g-soldi">
+      <b>I soldi: pacchetti, rate, incassi</b><span class="frec">&rsaquo;</span></button>
+    <div class="gl" id="g-soldi" hidden>
+      <div class="gr solo"><div><b>Un incasso in cinque secondi</b>
+        <span>Nella pagina <b>Soldi</b> tocca <b>Segna pagato</b> accanto al cliente, oppure scrivimi
+        <code>PAGATO</code> e il nome. Segno la prima rata aperta, ti dico quanto resta.
+        Se ha pagato una cifra diversa: <code>PAGATO Marco 150</code>.</span></div></div>
+      <div class="gr solo"><div><b>A rate</b>
+        <span><code>RATE Marco 3</code> divide quello che resta in tre rate mensili; con una data,
+        <code>RATE Marco 3 15/10</code>, la prima scade quel giorno. Tre giorni prima di ogni
+        rata scrivo io al cliente per ricordargliela; se non paga, un promemoria il giorno dopo,
+        poi uno a settimana, mai pi&ugrave; di tre.</span></div></div>
+      <div class="gr solo"><div><b>Quanto ti deve</b>
+        <span><code>SOLDI Marco</code> per uno, <code>SOLDI</code> da solo per tutti: incassato del mese,
+        da incassare, chi &egrave; in ritardo. Lo stesso che vedi qui nella pagina Soldi.</span></div></div>
+    </div>
+
+    <button class="apri" type="button" aria-expanded="false" data-ap="g-tel">
+      <b>Tienitelo sul telefono</b><span class="frec">&rsaquo;</span></button>
+    <div class="gl" id="g-tel" hidden>
+      <div class="gr solo"><div><b>Su Android</b><span>Apri questa pagina con Chrome, tocca i
+        <b>tre puntini</b> in alto a destra, poi <b>Aggiungi a schermata Home</b>.
+        Compare l&rsquo;icona come una app qualsiasi.</span></div></div>
+      <div class="gr solo"><div><b>Su iPhone</b><span>Apri questa pagina con Safari, tocca il
+        <b>quadrato con la freccia</b> in basso, scorri e tocca
+        <b>Aggiungi alla schermata Home</b>.</span></div></div>
+      <div class="gr solo"><div><b>Serve solo la prima volta</b><span>Da l&igrave; in poi la apri
+        con un dito e trovi sempre i numeri di ieri sera: non devi cercare il link
+        n&eacute; salvarlo fra i preferiti.</span>
+        <div class="azioni" style="margin-top:10px"><button class="btn pri" type="button" id="b-installa">Fammi vedere come si fa</button></div></div></div>
+    </div>
+
+    <button class="apri" type="button" aria-expanded="false" data-ap="g-prima">
+      <b>Prima cosa da fare</b><span class="frec">&rsaquo;</span></button>
+    <div class="gl" id="g-prima" hidden>
+      <div class="gr"><i class="pall2" style="background:#3f51b5"></i><div>
+        <b>Metti il calendario in Mirtillo</b>
+        <span>Quando aggiungi il calendario al tuo Google, lui gli d&agrave; un colore a caso.
+        Cambialo in Mirtillo: nella lista a sinistra, i tre puntini accanto al nome, poi il
+        colore. Serve perch&eacute; i colori dei singoli allenamenti li metto io e non devono
+        confondersi con quello di sfondo.</span></div></div>
+    </div>
+
+    <button class="apri" type="button" aria-expanded="false" data-ap="g-col">
+      <b>I colori che metto io</b><span class="frec">&rsaquo;</span></button>
+    <div class="gl" id="g-col" hidden>
+      <div class="gr"><i class="pall2" style="background:#7986cb"></i><div><b>Lavanda</b>
+        <span>Allenamento fissato, il cliente non ha ancora confermato.</span></div></div>
+      <div class="gr"><i class="pall2" style="background:#0b8043"></i><div><b>Basilico (verde)</b>
+        <span>Ha confermato, oppure la lezione &egrave; gi&agrave; stata contata.</span></div></div>
+      <div class="gr"><i class="pall2" style="background:#7cb342"></i><div><b>Salvia</b>
+        <span>Allenamento di coppia o di gruppo: la lezione viene scalata a tutti.</span></div></div>
+      <div class="gr"><i class="pall2" style="background:#f4511e"></i><div><b>Mandarino (arancione)</b>
+        <span>ULTIMA lezione del pacchetto o del percorso. &Egrave; l&igrave; che conviene parlare di
+        rinnovo, di persona. Su chi &egrave; a abbonamento non compare: il suo mese riparte da solo.</span></div></div>
+      <div class="gr"><i class="pall2" style="background:#e67c73"></i><div><b>Fenicottero (rosa)</b>
+        <span>Lezione OLTRE il pacchetto o il percorso: gi&agrave; fatta e non pagata. In
+        &laquo;Da fare&raquo; trovi il comando da mandare. Su abbonamento e a consumo non compare.</span></div></div>
+      <div class="gr"><i class="pall2" style="background:#039be5"></i><div><b>Pavone (azzurro)</b>
+        <span>Lezione regalata: non la conto a nessuno.</span></div></div>
+      <div class="gr"><i class="pall2" style="background:#f6bf26"></i><div><b>Banana (giallo)</b>
+        <span>Non ho riconosciuto il nome. Controlla come lo hai scritto nel titolo
+        dell&rsquo;allenamento: nome e cognome come stanno nell&rsquo;elenco clienti.</span></div></div>
+    </div>
+
+    <button class="apri" type="button" aria-expanded="false" data-ap="g-tuoi">
+      <b>I due colori che metti tu</b><span class="frec">&rsaquo;</span></button>
+    <div class="gl" id="g-tuoi" hidden>
+      <div class="gr solo"><div><b>Questi due sono tuoi</b>
+        <span>Io non li tocco mai.</span></div></div>
+      <div class="gr"><i class="pall2" style="background:#d50000"></i><div><b>Pomodoro (rosso)</b>
+        <span>Ha disdetto all&rsquo;ultimo e la lezione va contata lo stesso. NON cancellare
+        l&rsquo;evento: coloralo. Cancellato = non contato, rosso = contato.</span></div></div>
+      <div class="gr"><i class="pall2" style="background:#616161"></i><div><b>Grafite (grigio)</b>
+        <span>Salta per causa tua. Non conta, e al cliente scrivo io.</span></div></div>
+      <div class="gr solo"><div><b>Se dal telefono vedi solo i colori predefiniti</b>
+        <span>Apri il calendario da computer e colora un evento una volta sola: dopo compaiono
+        anche sul telefono. Dal menu rapido non ci sono tutti.</span></div></div>
+    </div>
+
+    <button class="apri" type="button" aria-expanded="false" data-ap="g-reg">
+      <b>Lezioni regalate e conteggi</b><span class="frec">&rsaquo;</span></button>
+    <div class="gl" id="g-reg" hidden>
+      <div class="gr solo"><div><b>Scrivi PROVA, GRATIS o FREE nel titolo</b>
+        <span>Anche accanto al nome: &laquo;Giulia Bianchi prova&raquo;, &laquo;Luca Rossi gratis&raquo;,
+        &laquo;Sara free&raquo;. Va bene anche solo &laquo;prova&raquo;, senza nome.
+        Quella lezione non la conto a nessuno e la coloro di azzurro, cos&igrave; a fine
+        mese sai quante ne hai regalate. Vale sia per chi non &egrave; ancora tuo cliente
+        sia per uno che hai gi&agrave; e a cui vuoi offrire una sessione.</span></div></div>
+      <div class="gr solo"><div><b>A chi scrivo e a chi no</b>
+        <span>Se la persona non &egrave; in elenco non le scrivo nulla: non ho il suo
+        consenso. Se invece &egrave; gi&agrave; un tuo cliente, il promemoria del giorno prima
+        gli arriva normalmente.</span></div></div>
+      <div class="gr solo"><div><b>Le lezioni che restano</b>
+        <span>Un numero secco per <b>pacchetto</b> e <b>percorso</b>. &laquo;3 di 10 questo mese&raquo;
+        per chi &egrave; a <b>abbonamento</b>, e riparte il primo del mese. Niente per chi paga
+        <b>a consumo</b>. Un numero negativo vuol dire lezioni fatte e non pagate.</span></div></div>
+    </div>
+
+    <div class="tit">Da controllare ogni settimana</div>
+    <div class="gl agire">
+      <div class="gr solo"><div><b>Priorit&agrave; ALTA in Da fare</b>
+        <span>Sono clienti a pacchetto finito o quasi. <b>&Egrave; l&igrave; che stanno i tuoi
+        rinnovi</b>: una volta a settimana guarda solo quelle righe e mandale.</span></div></div>
+      <div class="gr solo"><div><b>Consenso WhatsApp = NO</b>
+        <span>Quel cliente non riceve nessun messaggio, e non lo ricever&agrave; finch&eacute; non me lo
+        dici tu. Chiediglielo a voce o scrivigli dal tuo numero, poi manda <code>DATI</code>
+        col suo numero al tuo assistente: il consenso &egrave; la prima riga del modulo che si apre.
+        Serve a proteggere te e il servizio - senza consenso i messaggi vengono
+        segnalati come spam, e a quel punto rischiano di non partire per
+        nessuno.</span></div></div>
+      <div class="gr solo"><div><b>Chi non ha la prossima lezione fissata</b>
+        <span>Non &egrave; un allarme, quindi non lo trovi in Da fare: te lo dice la tessera
+        <b>senza prossima</b>. Un cliente attivo senza niente in agenda &egrave; il primo che
+        smette di venire.</span></div></div>
+    </div>
+
+    <div class="tit">Comandi assistente</div>
+    <button class="apri" type="button" aria-expanded="false" data-ap="cmd1">
+      <b>I comandi che NON vogliono un cliente</b><span class="frec">&rsaquo;</span></button>
+    <div class="gl" id="cmd1" hidden>
+      <div class="gr solo"><div><b><code>MENU</code></b><span>Tutto quello che posso fare, in dieci righe. Se scrivi una parola che non conosco, ti rispondo con questo.</span></div></div>
+      <div class="gr solo"><div><b><code>MALATTIA oggi</code></b><span>Oggi non alleni: fermo tutto per oggi. Ai clienti scrivo io.</span></div></div>
+      <div class="gr solo"><div><b><code>PAUSA</code></b><span>Le tue ferie: ti fermi tu, non un cliente.</span></div></div>
+      <div class="gr solo"><div><b><code>RIPRENDI</code></b> o <b><code>RIENTRO</code></b><span>Sei tornato: riparte tutto.</span></div></div>
+      <div class="gr solo"><div><b><code>CHIUDO</code></b><span>Chiudi la giornata prima del previsto.</span></div></div>
+      <div class="gr solo"><div><b><code>SCHEDA</code></b><span>Hai aggiornato la scheda clienti: la rileggo.</span></div></div>
+      <div class="gr solo"><div><b><code>CRUSCOTTO</code></b><span>Ti rimando il link di questa pagina.</span></div></div>
+    </div>
+    <button class="apri" type="button" aria-expanded="false" data-ap="cmd2">
+      <b>I comandi che vogliono il numero del cliente</b><span class="frec">&rsaquo;</span></button>
+    <div class="gl" id="cmd2" hidden>
+      <div class="gr solo"><div><b><code>GESTISCI</code> numero</b><span>La porta di tutte le altre: apre il modulo e scegli tu cosa fare. Va bene anche col <b>nome</b> invece del numero, e se sono in due te lo chiedo.</span></div></div>
+      <div class="gr solo"><div><b><code>RINNOVA</code> &middot; <code>LEZIONI</code> &middot; <code>PROROGA</code> numero</b>
+        <span>Aprono <b>lo stesso modulo</b>, quello delle lezioni: da l&igrave; aggiungi lezioni al
+        pacchetto, correggi il conteggio quando non torna, o sposti la scadenza. Compili solo
+        la riga che ti serve e lasci vuote le altre. &Egrave; una scorciatoia: ti risparmia di
+        scegliere il cliente, non di scegliere cosa fare.</span></div></div>
+      <div class="gr solo"><div><b><code>CAMBIA</code> numero</b><span>Cambia come paga: pacchetto, abbonamento, percorso, a consumo.</span></div></div>
+      <div class="gr solo"><div><b><code>DATI</code> numero</b><span>Cambia i suoi dati: telefono, con chi si allena, obiettivo, come lo chiami sul calendario. Valgono anche <code>ALIAS</code> e <code>OBIETTIVO</code>. Da qui dai anche il consenso ai messaggi: &egrave; la prima riga.</span></div></div>
+      <div class="gr solo"><div><b><code>FERIE</code> numero</b><span>Lo metti in pausa: ferie o infortunio suoi.</span></div></div>
+      <div class="gr solo"><div><b><code>SOSPENDI</code> numero</b><span>Si ferma ma resta tuo cliente. Da qui lo fai anche <b>ripartire</b>.</span></div></div>
+      <div class="gr solo"><div><b><code>CHIUDI</code> numero</b><span>Non &egrave; pi&ugrave; tuo cliente. Libera un posto.</span></div></div>
+    </div>
+    <div class="gl"><div class="gr solo"><div><b>Non serve impararli</b>
+      <span>Ogni cliente e ogni cosa da fare ha gi&agrave; il suo bottone: tocchi, si apre
+      WhatsApp col comando gi&agrave; scritto, tu premi invio. Il modulo che si apre
+      dopo ti chiede il resto.</span></div></div></div>
+
+    <div class="tit" id="tit-profilo" hidden>Il tuo profilo</div>
+    <div id="l-profilo"></div>
+
+    <div class="tit">Servizio</div>
+    <div class="azioni" style="margin-top:0">
+      <a class="btn" id="b-scheda" hidden target="_blank" rel="noopener">La tua scheda clienti</a>
+      <button class="btn pri" type="button" id="b-aiuto">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
+        Scrivici</button>
+      <button class="btn" type="button" id="b-stampa">Stampa</button>
+    </div>
+  </section>
+
+  <div class="pie">
+    ZenitPT &middot; assistente di <span id="p-nome">questo studio</span><br>
+    Questa pagina contiene i recapiti dei tuoi clienti: non condividere il link.
+  </div>
+</main>
+
+<nav class="barra" role="tablist">
+  <button role="tab" type="button" data-t="oggi" aria-selected="true">
+    <span class="w"><svg viewBox="0 0 24 24"><path d="M4 5.5h16M4 12h16M4 18.5h10"/></svg><i class="bollo" id="bollo" hidden>0</i></span>
+    Oggi</button>
+  <button role="tab" type="button" data-t="clienti" aria-selected="false">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.3"/><path d="M3 19c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><path d="M16.5 6.2a3 3 0 0 1 0 5.6M18 19c-.3-1.9-1-3.4-2.2-4.4"/></svg>
+    Clienti</button>
+  <button role="tab" type="button" data-t="messaggi" aria-selected="false">
+    <svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 1-11.8 7L4 20l1.1-4A8 8 0 1 1 20 12z"/></svg>
+    Messaggi</button>
+  <button role="tab" type="button" data-t="stat" aria-selected="false">
+    <svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19v-6"/></svg>
+    Statistiche</button>
+  <button role="tab" type="button" data-t="soldi" aria-selected="false">
+    <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M3 10h18M3 14h18" opacity=".35"/></svg>
+    Soldi</button>
+</nav>
+
+<script id="zp-dati" type="application/json">__DATI__</script>
+
+<script>
+(function(){
+"use strict";
+var $ = function(s){ return document.querySelector(s); };
+/* GUARDIA. La stringa qui sotto e la SECONDA occorrenza del segnaposto nella
+   pagina, ed e voluta: S6 le conta e ne pretende esattamente due, CR
+   sostituisce solo la PRIMA - il blocco qui sopra. Se un giorno CR non gira,
+   nel blocco arriva il segnaposto intatto e la pagina lo riconosce invece di
+   rompersi su un JSON non valido.
+   Non spezzarla e non nominarla altrove: il conto di S6 e su di lei. */
+var D = {}, senzaDati = false;
+try{
+  var raw = ($('#zp-dati').textContent || '').trim();
+  if(raw === '__DATI__' || raw === '') senzaDati = true; else D = JSON.parse(raw) || {};
+}catch(e){ senzaDati = true; }
+
+/* Le colonne, nell ordine della riga 5 del modello. STOP e la QUINDICESIMA:
+   finche CR non la passa la riga e corta, v() torna "" e tutto quello che la
+   legge tace - nessuna colonna inventata, nessuna tessera che mente. */
+var F = { PRIO:0, CLIENTE:1, TEL:2, COSA:3, COME:4, CMD:5 };
+var C = { NOME:0, COGN:1, TEL:2, STATO:3, PAGA:4, TOT:5, USATE:6, RES:7, PROX:8,
+          ULT:9, CONS:10, FB:11, PAUSA:12, CON:13, STOP:14 };
+var M = { DATA:0, ORA:1, CLIENTE:2, TIPO:3, ESITO:4 };
+
+function righe(x, primaCella){
+  if(!Array.isArray(x)) return [];
+  var r = x.filter(function(y){ return Array.isArray(y) && y.length; });
+  /* se la prima riga e l intestazione del foglio si toglie: confronto per
+     INIZIO e senza accenti, perche "Priorita" con l accento non e "priorit" */
+  if(r.length && String(r[0][0] || '').toLowerCase().replace(/[^a-z]/g, '')
+      .indexOf(primaCella) === 0) r = r.slice(1);
+  return r;
+}
+var pt = D.pt || {};
+var DAFARE = righe(D.da_fare, 'priorit');
+var CLI    = righe(D.clienti, 'nome');
+var MSG    = righe(D.messaggi, 'data');
+
+function v(r, i){ return String(r[i] == null ? '' : r[i]).trim(); }
+function t(x){ return x == null ? '' : String(x).trim(); }
+function esc(s){ return t(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function ico(){ return '<svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-3.2-6.4"/>' +
+  '<path d="M4 20l1.5-4"/></svg>'; }
+function vuoto(a, b){ return '<div class="box"><div class="vuoto"><b>' + esc(a) + '</b>' +
+  esc(b || '') + '</div></div>'; }
+
+var ASS = t(pt.numero_assistente).replace(/[^0-9]/g, '');
+var haAss = ASS.length >= 8;
+function telPulito(x){
+  var s = t(x).replace(/[^0-9]/g, '');
+  if(!s) return '';
+  if(s.length === 10 && s.charAt(0) === '3') s = '39' + s;
+  return s;
+}
+/* Il numero intero non si stampa nell elenco: la pagina e protetta solo
+   dall indirizzo, e un indirizzo puo finire in un gruppo. Mascherato basta a
+   riconoscere la persona; intero sta nella scheda, che si apre apposta. */
+function telMascherato(x){
+  var s = t(x), d = s.replace(/[^0-9]/g, '');
+  if(d.length < 7) return s;
+  return (s.charAt(0) === '+' ? '+' : '') + d.slice(0, 2) + ' \u2022\u2022\u2022\u2022\u2022 ' + d.slice(-4);
+}
+var IDXTEL = {};
+CLI.forEach(function(c, i){ var k = telPulito(c[C.TEL]); if(k && IDXTEL[k] === undefined) IDXTEL[k] = i; });
+
+/* ---------- comandi a meta ----------
+   n e il numero di PEZZI del comando completo, parola compresa: RINNOVA
+   <numero> <quante> sono tre. Cosi il RINNOVA che arriva dal Da fare (gia
+   completo) non prende la coda, e quello della scheda cliente si. */
+/* ---------- LE PAROLE VIVE ----------
+   QUESTO E L UNICO POSTO. Un tasto esiste solo se la sua parola sta qui
+   dentro: la barra in alto, la scheda cliente, il ripiego che pesca il
+   comando dal testo e la colonna Comando che manda CR passano tutti da
+   viva(). Una parola che il ROUTER non conosce apre il MENU, e un tasto
+   che apre il menu e peggio di nessun tasto.
+   Chi pota il ROUTER pota QUESTA riga, e i tasti spariscono da soli.
+   Misurate sul ROUTER di E: 8 senza argomento + 11 con argomento = 19.
+   Fuori restano NUMERO, COPPIA, REPORT, AIUTO, AGGIUNGI, CLIENTI,
+   CORREGGI, RIATTIVA: erano tasti, non lo sono piu. */
+var VIVE = { MENU:1, MALATTIA:1, CHIUDO:1, RIENTRO:1, RIPRENDI:1, PAUSA:1,
+             SCHEDA:1, CRUSCOTTO:1,
+             GESTISCI:1, LEZIONI:1, RINNOVA:1, PROROGA:1, CAMBIA:1, DATI:1,
+             ALIAS:1, OBIETTIVO:1, SOSPENDI:1, CHIUDI:1, FERIE:1 };
+VIVE.PAGATO = 1; VIVE.SOLDI = 1; VIVE.RATE = 1;   /* 20/09: i soldi */
+function viva(cmd){
+  return VIVE[(t(cmd).split(/\s+/)[0] || '').toUpperCase()] === 1;
+}
+/* Comandi a meta: non ce ne sono piu. Da quando il ROUTER accetta la parola
+   COL CLIENTE, RINNOVA <numero> apre gia il modulo e il resto lo chiede il
+   modulo. Se un giorno tornasse una parola che vuole un pezzo scritto a
+   mano, si rimette qui e i bottoni tornano arancioni da soli. */
+var ARG = {};
+function daFinire(cmd, breve){
+  var p = t(cmd).split(/\s+/), k = ARG[(p[0] || '').toUpperCase()];
+  return (k && p.length < k.n) ? (breve ? k.s : k.t) : '';
+}
+function coda(cmd, breve){ var c = daFinire(cmd, breve);
+  return c ? '<em>' + esc(c) + '</em>' : ''; }
+function bottoneComando(cmd, etichetta, breve, primario){
+  if(!viva(cmd)) return '';   /* parola morta = nessun tasto */
+  var meta = primario ? ' pri' : '';
+  var dentro = ico() + esc(etichetta) + coda(cmd, breve);
+  if(haAss) return '<a class="btn' + meta + '" target="_blank" rel="noopener" href="https://wa.me/' +
+    ASS + '?text=' + encodeURIComponent(daFinire(cmd) ? cmd + ' ' : cmd) + '">' + dentro + '</a>';
+  return '<button class="btn' + meta + '" type="button" data-copia="' + esc(cmd) + '">' +
+    dentro + '</button>';
+}
+/* il comando finisce dove finiscono gli argomenti: solo pezzi che iniziano per
+   cifra o +, cosi la frase dopo la virgola non entra nel messaggio */
+var RXCMD = new RegExp('\\b(' + Object.keys(VIVE).join('|') + ')\\b(\\s+[+0-9][0-9+]*)*');
+
+/* ---------- come si legge un cliente ---------- */
+function residueNum(c){ var m = v(c, C.RES).match(/-?\d+/); return m ? parseInt(m[0], 10) : null; }
+function aConsumo(c){ return v(c, C.PAGA).toLowerCase().indexOf('consumo') > -1; }
+function inPausa(c){ return v(c, C.PAUSA) !== '' || v(c, C.STATO).toUpperCase() === 'FERIE'; }
+function senzaConsenso(c){ return v(c, C.CONS).toUpperCase() === 'NO'; }
+/* Il cliente ha scritto STOP: per legge non gli si scrive piu, e non e la
+   stessa cosa del consenso mai dato. La cella porta la data, non un SI. */
+function haStop(c){ return v(c, C.STOP) !== ''; }
+function senzaProssima(c){ return v(c, C.PROX) === ''; }
+/* La scala e 3 Ottima, 2 Bene, 1 il peggio: basso e 1. Se un giorno si gira,
+   si gira qui e in nessun altro posto. */
+function feedbackBasso(c){ var m = v(c, C.FB).match(/\d+/); return !!m && parseInt(m[0], 10) === 1; }
+function attivo(c){ var s = v(c, C.STATO).toUpperCase();
+  return s === '' || s === 'ATTIVO' || s === 'FERIE'; }
+function nomeIntero(c){ return (v(c, C.NOME) + ' ' + v(c, C.COGN)).trim() || 'Senza nome'; }
+
+function segnale(c){
+  if(haStop(c))        return { k:'muto',  cl:'p-muto',   b:'muto',   t:'ha scritto STOP' };
+  if(senzaConsenso(c)) return { k:'muto',  cl:'p-muto',   b:'muto',   t:'non riceve niente' };
+  var s = v(c, C.STATO).toUpperCase();
+  if(s === 'CHIUSO' || s === 'FERMO') return { k:'fermo', cl:'p-fermo', b:'', t:s.toLowerCase() };
+  if(inPausa(c))       return { k:'pausa', cl:'p-attesa', b:'attesa', t:'in pausa' };
+  var r = residueNum(c);
+  if(r !== null && r < 0)   return { k:'oltre',  cl:'p-oltre',  b:'oltre',  t:'oltre il pacchetto' };
+  if(r !== null && r === 0) return { k:'finito', cl:'p-attesa', b:'attesa', t:'pacchetto finito' };
+  if(r !== null && r <= 2 && !aConsumo(c))
+                            return { k:'poche',  cl:'p-attesa', b:'attesa', t:'agli sgoccioli' };
+  return { k:'ok', cl:'p-ok', b:'ok', t:'' };
+}
+function daRinnovare(c){ var k = segnale(c).k; return k === 'oltre' || k === 'finito' || k === 'poche'; }
+
+/* ---------- testata e avvisi ---------- */
+var attiviN = CLI.filter(attivo).length;
+$('#h-nome').textContent = t(pt.nome) || 'Cruscotto';
+$('#p-nome').textContent = t(pt.nome) || 'questo studio';
+$('#h-ora').textContent  = t(pt.aggiornato);
+/* L'ultima lettura sta scritta per esteso anche nel corpo: in testata si
+   stringe e sotto i 430 px sparisce, e sapere DI QUANDO sono i numeri e la
+   prima cosa da sapere prima di fidarsene. */
+(function(){
+  var el = $('#letto'); if(senzaDati) return;
+  var q = t(pt.aggiornato);
+  el.innerHTML = '<i></i><span>Ultima lettura del calendario: <b>' +
+    esc(q || 'non ancora fatta') + '</b></span>';
+  el.hidden = false;
+})();
+if(t(pt.piano)){
+  var tetto = parseInt(pt.max_clienti, 10);
+  $('#h-piano').textContent = t(pt.piano) + (tetto > 0 ? ' \u00b7 ' + attiviN + '/' + tetto : '');
+  $('#h-piano').hidden = false;
+}
+(function(){
+  var a = [];
+  if(senzaDati) a.push('<div class="avviso"><b>Questa pagina non ha ancora i dati.</b> ' +
+    'Si riempie da sola stasera. Se la vedi vuota domani, scrivi <b>MENU</b> al tuo assistente e dillo a noi.</div>');
+  /* Senza questo, tre sere di CR fallito si leggono identiche a una sera
+     andata bene: il PT prende per oggi dei dati di martedi. Il campo puo
+     mancare: allora si tace, che e diverso dal dire una data sbagliata. */
+  var iso = t(pt.aggiornato_iso);
+  if(iso){
+    var ms = Date.parse(iso);
+    if(!isNaN(ms)){
+      var ore = Math.floor((Date.now() - ms) / 3600000);
+      if(ore >= 30){
+        var g = Math.floor(ore / 24);
+        a.push('<div class="avviso grave"><b>Questa pagina non si aggiorna ' +
+          (g >= 2 ? 'da ' + g + ' giorni' : 'da ieri sera') + '.</b> I numeri che leggi sono ' +
+          'di allora. Scrivi <b>MENU</b> al tuo assistente e dillo a noi.</div>');
+      }
+    }
+  }
+  /* Senza numero dell assistente TUTTI i bottoni degradano da apri-WhatsApp a
+     copia-negli-appunti. Il degrado resta, ma si dice: prima il PT toccava,
+     leggeva Copiato e non capiva perche non si apriva niente. */
+  if(!senzaDati && !haAss) a.push('<div class="avviso"><b>Il tuo assistente non &egrave; ancora ' +
+    'collegato a questa pagina.</b> I bottoni non aprono WhatsApp: copiano il messaggio, ' +
+    'e lo incolli tu nella chat con l&rsquo;assistente.</div>');
+  $('#avvisi').innerHTML = a.join('');
+})();
+
+$('#b-tema').addEventListener('click', function(){
+  var n = document.documentElement.getAttribute('data-tema') === 'chiaro' ? 'scuro' : 'chiaro';
+  document.documentElement.setAttribute('data-tema', n);
+  try{ localStorage.setItem('zp-tema', n); }catch(e){}
+});
+$('#b-stampa').addEventListener('click', function(){ window.print(); });
+$('#b-aiuto').addEventListener('click', function(){
+  var a = 'assistenza@zenitpt.it';   /* <-- unica riga da cambiare se l indirizzo cambia */
+  location.href = 'mailto:' + a +
+    '?subject=' + encodeURIComponent('Assistenza ZenitPT - ' + (t(pt.nome) || 'cruscotto')) +
+    '&body=' + encodeURIComponent('Scrivi qui cosa non torna o cosa ti serve.\n\n---\n' +
+      'Cruscotto: ' + (window.ZP_SLUG || '(sconosciuto)') + '\n' +
+      'Aggiornato: ' + (t(pt.aggiornato) || '-') + '\nPiano: ' + (t(pt.piano) || '-') + '\n');
+});
+/* La scheda: CR puo passare l indirizzo intero oppure il solo id del file su
+   Drive. Se non passa niente il bottone resta nascosto: meglio assente che rotto. */
+(function(){
+  var u = t(pt.link_scheda);
+  if(!u && t(pt.file_scheda_id))
+    u = 'https://drive.google.com/file/d/' + encodeURIComponent(t(pt.file_scheda_id)) + '/view';
+  if(!u) return;
+  var b = $('#b-scheda'); b.href = u; b.hidden = false;
+})();
+
+/* ---------- barra comandi: solo parole che il ROUTER di E riconosce ----------
+   Un bottone che manda una parola che E non conosce fa scrivere il PT nel
+   vuoto, ed e peggio del bottone che manca: lui crede di aver fatto la cosa.
+   MALATTIA (del PT) e FERIE (di UN cliente) sono due comandi diversi: qui in
+   alto sta solo il primo, l altro sta nella scheda dove il numero c e. */
+$('#cmdbar').innerHTML = [
+  ['MENU', 'MENU'], ['MALATTIA oggi', 'MALATTIA'], ['PAUSA', 'PAUSA'],
+  ['RIPRENDI', 'RIPRENDI'], ['SCHEDA', 'SCHEDA']
+].map(function(x){ return bottoneComando(x[0], x[1], true, false); }).join('');
+
+/* ---------- tessere ---------- */
+var rinnN  = CLI.filter(function(c){ return attivo(c) && daRinnovare(c); }).length;
+var consN  = CLI.filter(senzaConsenso).length;
+var pausaN = CLI.filter(function(c){ return attivo(c) && inPausa(c); }).length;
+var agendaN= CLI.filter(function(c){ return attivo(c) && !inPausa(c) && senzaProssima(c); }).length;
+var fbN    = CLI.filter(function(c){ return attivo(c) && feedbackBasso(c); }).length;
+var stopN  = CLI.filter(haStop).length;
+var koN    = MSG.filter(function(m){ return v(m, M.ESITO).toLowerCase().indexOf('errore') > -1; }).length;
+
+var TESS = [
+  { n:attiviN, e:'clienti attivi', f:'attivi',  cl:'' },
+  { n:rinnN,   e:'da rinnovare',   f:'rinnovo', cl:rinnN ? 'crit' : '' },
+  { n:agendaN, e:'senza prossima', f:'agenda',  cl:agendaN ? 'male' : '' },
+  { n:consN,   e:'senza consenso', f:'consenso',cl:consN ? 'male' : '' },
+  { n:pausaN,  e:'in pausa',       f:'pausa',   cl:'' }
+];
+if(koN) TESS.push({ n:koN, e:koN === 1 ? 'messaggio fallito' : 'messaggi falliti', f:'__msg', cl:'male' });
+/* Queste due compaiono solo se c e qualcosa da vedere: una tessera a zero
+   tutti i giorni si smette di leggerla, e quando dice 1 nessuno la guarda. */
+if(fbN)   TESS.splice(3, 0, { n:fbN, e:fbN === 1 ? 'feedback basso' : 'feedback bassi',
+                              f:'feedback', cl:'crit' });
+if(stopN) TESS.push({ n:stopN, e:stopN === 1 ? 'ha scritto STOP' : 'hanno scritto STOP',
+                      f:'stop', cl:'male' });
+$('#t-oggi').innerHTML = TESS.map(function(x){
+  return '<button class="tes ' + x.cl + '" type="button" data-f="' + x.f +
+    '" aria-pressed="false"><span class="n num">' + x.n + '</span><span class="e">' +
+    esc(x.e) + '</span></button>';
+}).join('');
+
+/* ---------- stasera ----------
+   Quello che l assistente ha fatto nelle ultime 24 ore, in una riga: e la
+   prima cosa che un PT guarda la sera per fidarsi del resto. CR manda coppie
+   [etichetta, numero]; se non manda niente la striscia non c e. */
+(function(){
+  var S = D.stasera, el = $('#stasera');
+  if(!Array.isArray(S)) return;
+  var vis = S.filter(function(x){ return Array.isArray(x) && Number(x[1]) > 0; });
+  if(!vis.length) return;
+  el.innerHTML = '<span class="k">L\u2019assistente nelle ultime 24 ore</span>' + vis.map(function(x){
+    var ko = /non partit|fallit/i.test(String(x[0]));
+    return '<span' + (ko ? ' class="ko"' : '') + '><b class="num">' + esc(x[1]) + '</b>' + esc(x[0]) + '</span>';
+  }).join('');
+  el.hidden = false;
+})();
+
+/* ---------- DA FARE ---------- */
+var ORD = { ALTA:0, MEDIA:1, BASSA:2 }, qFare = '';
+var df = DAFARE.slice().sort(function(a, b){
+  var x = ORD[v(a, F.PRIO).toUpperCase()], y = ORD[v(b, F.PRIO).toUpperCase()];
+  return (x === undefined ? 3 : x) - (y === undefined ? 3 : y);
+});
+/* Il comando di UNA cosa da fare: il bottone primario, gia completo. Sul
+   bottone si legge la PAROLA e il nome, non il numero: "RINNOVA - Giulia"
+   dice cosa succede, "+393001000101 10" no. */
+function bottoneFare(r, chi){
+  var cmd = v(r, F.CMD);
+  if(!cmd){ var m = v(r, F.COME).match(RXCMD); if(m) cmd = m[0].trim().replace(/[,;]+$/, ''); }
+  if(!cmd) return '';
+  var nome = (chi || '').split(' ')[0];
+  nome = nome ? nome.charAt(0) + nome.slice(1).toLowerCase() : '';
+  return bottoneComando(cmd, cmd.split(/\s+/)[0] + (nome ? ' \u00b7 ' + nome : ''), false, true);
+}
+/* Le azioni sulla PERSONA: una volta sola in fondo, non una per riga. */
+function azioniPersona(chi, tl){
+  var out = [], p = telPulito(tl);
+  if(p){
+    out.push('<a class="btn" target="_blank" rel="noopener" href="https://wa.me/' + p + '">' +
+      ico() + 'Scrivi a ' + esc((chi || '').split(' ')[0] || 'lui') + '</a>');
+    out.push('<a class="btn" href="tel:+' + p + '">Chiama</a>');
+    if(IDXTEL[p] !== undefined)
+      out.push('<button class="btn" type="button" data-vai="' + IDXTEL[p] + '">La sua scheda</button>');
+  }
+  return out.length ? '<div class="azioni">' + out.join('') + '</div>' : '';
+}
+/* Le cose da fare si raggruppano per PERSONA: tre righe su Chiara Vitale
+   erano tre volte lo stesso nome da leggere, e la lista sembrava il triplo.
+   La chiave e il telefono; senza telefono (un evento non riconosciuto) e il
+   nome com e scritto. L ordine resta quello della priorita piu alta. */
+function gruppiFare(lista){
+  var G = [], idx = {};
+  lista.forEach(function(x){
+    var tl = v(x, F.TEL), chi = v(x, F.CLIENTE);
+    var k = telPulito(tl) ? 't' + telPulito(tl) : (chi ? 'n' + chi.toLowerCase() : 'x' + G.length);
+    if(idx[k] === undefined){ idx[k] = G.length; G.push({ chi:chi, tl:tl, prio:v(x, F.PRIO).toUpperCase() || 'BASSA', voci:[] }); }
+    G[idx[k]].voci.push(x);
+  });
+  return G;
+}
+function disegnaFare(){
+  var el = $('#l-fare');
+  if(senzaDati){ el.innerHTML = vuoto('Dati non ancora arrivati',
+    'La pagina si riempie da sola stasera, dopo il conteggio.'); return; }
+  var r = gruppiFare(df.filter(function(x){
+    if(!qFare) return true;
+    return (v(x, F.CLIENTE) + ' ' + v(x, F.TEL) + ' ' + v(x, F.COSA) + ' ' + v(x, F.COME))
+             .toLowerCase().indexOf(qFare) > -1;
+  }));
+  var gTutti = gruppiFare(df).length;
+  $('#c-fare').textContent = DAFARE.length + (gTutti < DAFARE.length ? ' cose \u00b7 ' + gTutti + (gTutti === 1 ? ' persona' : ' persone') : '');
+  var b = $('#bollo');
+  var alte = DAFARE.filter(function(x){ return v(x, F.PRIO).toUpperCase() === 'ALTA'; }).length;
+  if(alte){ b.textContent = alte; b.hidden = false; } else b.hidden = true;
+  if(!r.length){
+    el.innerHTML = DAFARE.length
+      ? vuoto('Nessuna cosa da fare con questa ricerca', '')
+      : vuoto('Non c\u2019\u00e8 niente da sistemare', 'Tutto in ordine. Ricontrolla domani.');
+    return;
+  }
+  el.innerHTML = '<div class="box">' + r.map(function(g, i){
+    var prima = g.voci[0], altre = g.voci.length - 1;
+    var sotto = esc(g.chi) + (g.chi && g.tl ? ' &middot; ' : '') + esc(g.tl ? telMascherato(g.tl) : '') +
+      (altre ? ' &middot; <i class="altre">+' + altre + (altre === 1 ? ' altra cosa' : ' altre cose') + '</i>' : '');
+    var dentro = g.voci.map(function(x){
+      var pr = v(x, F.PRIO).toUpperCase() || 'BASSA';
+      return '<div class="voce">' +
+        (altre ? '<h4><span class="pallino p' + esc(pr) + '"></span>' + esc(v(x, F.COSA) || 'Da guardare') + '</h4>' : '') +
+        (v(x, F.COME) ? '<p>' + esc(v(x, F.COME)) + '</p>' : '') +
+        (bottoneFare(x, g.chi) ? '<div class="azioni">' + bottoneFare(x, g.chi) + '</div>' : '') + '</div>';
+    }).join('');
+    return '<button class="riga" type="button" aria-expanded="false" data-ap="f' + i + '">' +
+      '<span class="pallino p' + esc(g.prio) + '"></span>' +
+      '<span class="t"><b>' + esc(v(prima, F.COSA) || 'Da guardare') + '</b><span>' + sotto +
+      '</span></span><span class="frec">&rsaquo;</span></button>' +
+      '<div class="det" id="f' + i + '" hidden>' + dentro + azioniPersona(g.chi, g.tl) + '</div>';
+  }).join('') + '</div>';
+}
+
+/* ---------- CLIENTI ---------- */
+var FILTRI = ['attivi','rinnovo','agenda','consenso','pausa','feedback','stop','tutti'];
+var ETI = { attivi:'Attivi', rinnovo:'Da rinnovare', agenda:'Senza prossima',
+            consenso:'Senza consenso', pausa:'In pausa', feedback:'Feedback bassi',
+            stop:'Hanno scritto STOP', tutti:'Tutti' };
+var fCli = 'attivi', qCli = '', ordCli = 'urg';
+var PESO = { muto:0, oltre:1, finito:2, poche:3, pausa:4, ok:5, fermo:6 };
+$('#p-clienti').innerHTML = FILTRI.map(function(k){
+  return '<button class="pill" type="button" data-fc="' + k + '" aria-pressed="' +
+    (k === fCli) + '">' + ETI[k] + '</button>';
+}).join('');
+
+function passa(c){
+  if(qCli){
+    var ago = (nomeIntero(c) + ' ' + v(c, C.TEL) + ' ' + v(c, C.PAGA) + ' ' + v(c, C.CON)).toLowerCase();
+    if(ago.indexOf(qCli) === -1) return false;
+  }
+  if(fCli === 'tutti')    return true;
+  if(fCli === 'attivi')   return attivo(c);
+  if(fCli === 'rinnovo')  return attivo(c) && daRinnovare(c);
+  if(fCli === 'consenso') return senzaConsenso(c);
+  if(fCli === 'pausa')    return attivo(c) && inPausa(c);
+  if(fCli === 'agenda')   return attivo(c) && !inPausa(c) && senzaProssima(c);
+  if(fCli === 'feedback') return attivo(c) && feedbackBasso(c);
+  if(fCli === 'stop')     return haStop(c);
+  return true;
+}
+function pastiglia(c){
+  var sg = segnale(c), r = residueNum(c);
+  if(sg.k === 'muto')  return '<span class="chip muto">' + esc(sg.t) + '</span>';
+  if(sg.k === 'fermo') return '<span class="chip">' + esc(sg.t) + '</span>';
+  if(sg.k === 'pausa') return '<span class="chip attesa">' +
+    esc(v(c, C.PAUSA) ? 'fino al ' + v(c, C.PAUSA) : 'in pausa') + '</span>';
+  if(aConsumo(c))      return '<span class="chip">a consumo</span>';
+  if(r === null)       return '<span class="chip">' + esc(v(c, C.PAGA) || '\u2014') + '</span>';
+  if(r < 0)   return '<span class="chip oltre num">' + r + ' oltre</span>';
+  if(r === 0) return '<span class="chip attesa">pacchetto finito</span>';
+  if(r <= 2)  return '<span class="chip attesa num">' + r + ' residue</span>';
+  return '<span class="chip ok num">' + r + ' residue</span>';
+}
+function scheda(c){
+  function voce(k, val, cl){
+    return '<div><div class="k">' + k + '</div><div class="v ' + (cl || (val ? '' : 'spenta')) +
+      '">' + esc(val || '\u2014') + '</div></div>';
+  }
+  var h = '<div class="voci">';
+  if(haStop(c)) h += voce('Ha scritto STOP', v(c, C.STOP), 'no');
+  h += voce('Telefono', v(c, C.TEL));
+  h += voce('Stato', v(c, C.STATO) || 'ATTIVO');
+  h += voce('Come paga', v(c, C.PAGA));
+  var sl = soldiDi(c);
+  if(sl) h += voce('Pagamenti', sl.testo, sl.semaforo === 'rosso' ? 'no' : (sl.semaforo === 'giallo' ? 'attesa' : 'si'));
+  h += voce('Lezioni pagate', v(c, C.TOT));
+  h += voce('Usate', v(c, C.USATE));
+  h += voce('Restano', v(c, C.RES) || (aConsumo(c) ? 'paga a consumo' : ''));
+  h += voce('Prossima lezione', v(c, C.PROX));
+  h += voce('Ultima lezione', v(c, C.ULT));
+  h += voce('Consenso WhatsApp', v(c, C.CONS), senzaConsenso(c) ? 'no' : (v(c, C.CONS) ? 'si' : ''));
+  h += voce('Ultimo feedback', v(c, C.FB));
+  if(v(c, C.PAUSA)) h += voce('In pausa fino a', v(c, C.PAUSA));
+  if(v(c, C.CON))   h += voce('Si allena con', v(c, C.CON));
+  h += '</div>';
+
+  var p = telPulito(v(c, C.TEL)), az = [];
+  if(p) az.push('<a class="btn pri" target="_blank" rel="noopener" href="https://wa.me/' + p + '">' +
+    ico() + 'Scrivi a ' + esc(v(c, C.NOME) || 'lui') + '</a>');
+  if(p) az.push('<a class="btn" href="tel:+' + p + '">Chiama</a>');
+  if(p && senzaConsenso(c)) az.push('<a class="btn meta" target="_blank" rel="noopener" ' +
+    'href="https://wa.me/' + p + '?text=' + encodeURIComponent('Ciao ' + v(c, C.NOME) +
+    ', ti scrivo io. Uso un assistente su WhatsApp che manda i promemoria degli allenamenti ' +
+    'e tiene il conto delle lezioni. Va bene se ti scrive? Rispondimi qui.') + '">' + ico() +
+    'Chiedigli il consenso</a>');
+  if(az.length) h += '<div class="azioni">' + az.join('') + '</div>';
+
+  /* Tutti i comandi che riguardano LUI, gia col suo numero dentro. */
+  var tl = v(c, C.TEL);
+  if(tl){
+    /* GESTISCI per primo: e la porta che porta a tutte le altre, e se una
+       parola un giorno cade il PT ha comunque una strada. CORREGGI, NUMERO e
+       RIATTIVA erano tasti e non sono parole: LEZIONI corregge il conteggio,
+       DATI cambia numero coppia obiettivo e alias, e la riattivazione sta
+       dentro la schermata che apre SOSPENDI. */
+    var lista = ['GESTISCI ' + tl, 'PAGATO ' + tl, 'LEZIONI ' + tl, 'RINNOVA ' + tl, 'CAMBIA ' + tl,
+                 'PROROGA ' + tl, 'DATI ' + tl, 'FERIE ' + tl];
+    if(senzaConsenso(c)){ var iD = lista.indexOf('DATI ' + tl); if(iD > -1) lista.splice(iD, 1); lista.unshift('DATI ' + tl); }
+    lista.push('SOSPENDI ' + tl);
+    lista.push('CHIUDI ' + tl);
+    h += '<div class="cmdcli">' + lista.map(function(cmd){
+      return bottoneComando(cmd, cmd.split(' ')[0], true, false);
+    }).join('') + '</div>';
+  }
+  return h;
+}
+function disegnaClienti(){
+  reso.clienti = 1;
+  var el = $('#l-clienti');
+  if(senzaDati){ el.innerHTML = vuoto('Dati non ancora arrivati', ''); return; }
+  var vis = [];
+  CLI.forEach(function(c, i){ if(passa(c)) vis.push({ c:c, i:i }); });
+  if(ordCli === 'nome') vis.sort(function(a, b){
+    return nomeIntero(a.c).localeCompare(nomeIntero(b.c), 'it'); });
+  else if(ordCli === 'residue') vis.sort(function(a, b){
+    var x = residueNum(a.c), y = residueNum(b.c);
+    if(x === null && y === null) return 0;
+    if(x === null) return 1;
+    if(y === null) return -1;
+    return x - y; });
+  else vis.sort(function(a, b){
+    var d = PESO[segnale(a.c).k] - PESO[segnale(b.c).k];
+    return d !== 0 ? d : nomeIntero(a.c).localeCompare(nomeIntero(b.c), 'it'); });
+
+  $('#c-cli').textContent = vis.length + (vis.length !== CLI.length ? ' su ' + CLI.length : '');
+  if(!vis.length){
+    el.innerHTML = CLI.length
+      ? vuoto('Nessun cliente con questo filtro', 'Prova a togliere il filtro o la ricerca.')
+      : vuoto('Nessun cliente ancora', 'Appena ne entra uno lo trovi qui.');
+    return;
+  }
+  el.innerHTML = '<div class="box">' + vis.map(function(o){
+    var c = o.c, sg = segnale(c), sotto = [v(c, C.PAGA)];
+    if(sg.t) sotto.push(sg.t);
+    if(v(c, C.PROX)) sotto.push('prossima ' + v(c, C.PROX));
+    return '<button class="riga" type="button" aria-expanded="false" data-ap="c' + o.i + '">' +
+      '<span class="pallino ' + sg.cl + '"></span>' +
+      '<span class="t"><b>' + esc(nomeIntero(c)) + '</b><span>' +
+      sotto.filter(Boolean).map(esc).join(' &middot; ') + '</span></span>' +
+      pastiglia(c) + '<span class="frec">&rsaquo;</span></button>' +
+      '<div class="det" id="c' + o.i + '" hidden>' + scheda(c) + '</div>';
+  }).join('') + '</div>';
+}
+
+/* ---------- SOLDI ---------- */
+var SOLDI = (D.soldi && typeof D.soldi === 'object') ? D.soldi : null;
+var fSoldi = 'tutti';
+function soldiDi(c){
+  if(!SOLDI || !Array.isArray(SOLDI.clienti)) return null;
+  var tl = telPulito(v(c, C.TEL));
+  for(var i = 0; i < SOLDI.clienti.length; i++){
+    var x = SOLDI.clienti[i];
+    if(tl && telPulito(x.telefono) === tl) return x;
+  }
+  return null;
+}
+function euro(n){
+  n = Number(n || 0);
+  var s = (Math.round(n * 100) / 100).toFixed(2).replace('.', ',').replace(/,00$/, '');
+  return s + ' \u20ac';
+}
+function giornoIt(iso){
+  if(!iso) return '';
+  var m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})/); if(!m) return String(iso);
+  var mesi = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+  return parseInt(m[3], 10) + ' ' + mesi[parseInt(m[2], 10) - 1];
+}
+$('#p-soldi').innerHTML = [['tutti','Tutti'],['rosso','In ritardo'],['giallo','In scadenza'],['verde','In regola']]
+  .map(function(x){ return '<button class="pill" type="button" data-fs="' + x[0] +
+    '" aria-pressed="' + (x[0] === fSoldi) + '">' + x[1] + '</button>'; }).join('');
+function disegnaSoldi(){
+  reso.soldi = 1;
+  var t = $('#t-soldi'), el = $('#l-soldi');
+  if(senzaDati){ el.innerHTML = vuoto('Dati non ancora arrivati', ''); return; }
+  if(!SOLDI){
+    t.innerHTML = '';
+    el.innerHTML = vuoto('Nessun pagamento registrato ancora',
+      'Quando un cliente paga, scrivi al tuo assistente PAGATO e il nome: da domani sera lo vedi qui.');
+    $('#c-soldi').textContent = '0';
+    return;
+  }
+  t.innerHTML = schedaNum(euro(SOLDI.incassato_mese), 'incassati', SOLDI.mese ? 'a ' + SOLDI.mese : '') +
+    schedaNum(euro(SOLDI.da_incassare), 'da incassare', '', Number(SOLDI.da_incassare) > 0 ? 'crit' : '') +
+    schedaNum(euro(SOLDI.in_ritardo), 'in ritardo', '', Number(SOLDI.in_ritardo) > 0 ? 'male' : '');
+  var lista = (SOLDI.clienti || []).filter(function(x){ return fSoldi === 'tutti' || x.semaforo === fSoldi; });
+  $('#c-soldi').textContent = lista.length + (lista.length !== (SOLDI.clienti || []).length ? ' su ' + SOLDI.clienti.length : '');
+  if(!lista.length){
+    el.innerHTML = (SOLDI.clienti || []).length
+      ? vuoto('Nessuno con questo filtro', '')
+      : vuoto('Nessun pagamento registrato ancora', 'Scrivi al tuo assistente PAGATO e il nome del cliente.');
+    return;
+  }
+  el.innerHTML = '<div class="box">' + lista.map(function(x, i){
+    var righe = (x.righe || []).map(function(r){
+      var cl = r.stato === 'PAGATA' ? 'pagata' : (r.scadenza && r.scadenza < oggiIso() ? 'ritardo' : 'attesa');
+      var st = r.stato === 'PAGATA' ? 'pagata il ' + giornoIt(r.pagata_il)
+             : (cl === 'ritardo' ? 'in ritardo dal ' + giornoIt(r.scadenza) : (r.scadenza ? 'entro il ' + giornoIt(r.scadenza) : 'da pagare'));
+      return '<div class="rata ' + cl + '"><b>' + esc(euro(r.importo)) + '</b><span>' +
+        (r.su > 1 ? 'rata ' + r.n + ' di ' + r.su : 'unica') + (r.nota ? ' \u00b7 ' + esc(r.nota) : '') +
+        '</span><span class="st">' + esc(st) + '</span></div>';
+    }).join('');
+    var az = '';
+    if(x.residuo > 0 && x.comando) az += bottoneComando(x.comando, 'Segna pagato', true, true);
+    if(x.telefono) az += bottoneComando('SOLDI ' + x.telefono, 'Dettaglio su WhatsApp', true, false);
+    return '<button class="riga" type="button" aria-expanded="false" data-ap="s' + i + '">' +
+      '<span class="pallino p-' + esc(x.semaforo || 'verde') + '"></span>' +
+      '<span class="t"><b>' + esc(x.nome) + '</b><span>' + esc(x.testo || '') + '</span></span>' +
+      (x.residuo > 0 ? '<span class="chip' + (x.semaforo === 'rosso' ? ' muto' : (x.semaforo === 'giallo' ? ' attesa' : '')) + '">' + esc(euro(x.residuo)) + '</span>' : '<span class="chip ok">ok</span>') +
+      '<span class="frec">&rsaquo;</span></button>' +
+      '<div class="det" id="s' + i + '" hidden>' +
+        '<div class="voci"><div><div class="k">Totale</div><div class="v">' + esc(euro(x.totale)) + '</div></div>' +
+        '<div><div class="k">Pagato</div><div class="v">' + esc(euro(x.pagato)) + (x.rate_totali > 1 ? ' (' + x.rate_pagate + ' su ' + x.rate_totali + ')' : '') + '</div></div>' +
+        '<div><div class="k">Restano</div><div class="v' + (x.residuo > 0 ? '' : ' si') + '">' + esc(euro(x.residuo)) + '</div></div>' +
+        (x.metodo ? '<div><div class="k">Come paga</div><div class="v">' + esc(x.metodo) + '</div></div>' : '') + '</div>' +
+        (righe ? '<div class="rate">' + righe + '</div>' : '') +
+        (az ? '<div class="azioni">' + az + '</div>' : '') +
+      '</div>';
+  }).join('') + '</div>';
+}
+function oggiIso(){
+  var d = new Date(), p = function(n){ return (n < 10 ? '0' : '') + n; };
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+}
+
+/* ---------- MESSAGGI ---------- */
+var fMsg = 'tutti', qMsg = '', tuttiMsg = false;
+$('#p-msg').innerHTML = [['tutti','Tutti'],['problemi','Non partiti'],['risposte','Risposte dei clienti']]
+  .map(function(x){ return '<button class="pill" type="button" data-fm="' + x[0] +
+    '" aria-pressed="' + (x[0] === fMsg) + '">' + x[1] + '</button>'; }).join('');
+function classeEsito(e){
+  var s = e.toLowerCase();
+  if(s.indexOf('risposta') > -1) return 'ok';
+  if(s.indexOf('errore') > -1) return 'muto';
+  if(s.indexOf('non inviato') > -1 || s.indexOf('scartato') > -1) return 'attesa';
+  return '';
+}
+function disegnaMessaggi(){
+  reso.messaggi = 1;
+  var el = $('#l-messaggi');
+  if(senzaDati){ el.innerHTML = vuoto('Dati non ancora arrivati', ''); return; }
+  var vis = MSG.filter(function(m){
+    var e = v(m, M.ESITO).toLowerCase();
+    if(fMsg === 'problemi' && !(e.indexOf('non inviato') > -1 || e.indexOf('errore') > -1 ||
+       e.indexOf('scartato') > -1)) return false;
+    if(fMsg === 'risposte' && e.indexOf('risposta') === -1) return false;
+    if(qMsg && (v(m, M.CLIENTE) + ' ' + v(m, M.TIPO) + ' ' + v(m, M.ESITO))
+        .toLowerCase().indexOf(qMsg) === -1) return false;
+    return true;
+  });
+  $('#c-msg').textContent = vis.length + (vis.length !== MSG.length ? ' su ' + MSG.length : '');
+  if(!vis.length){
+    el.innerHTML = MSG.length ? vuoto('Nessun messaggio con questo filtro', '')
+      : vuoto('Nessun messaggio ancora', 'Appena l\u2019assistente scrive a qualcuno lo trovi qui.');
+    return;
+  }
+  var mostra = tuttiMsg ? vis : vis.slice(0, 25);
+  el.innerHTML = '<div class="box">' + mostra.map(function(m){
+    return '<div class="riga"><span class="t"><b>' + esc(v(m, M.CLIENTE) || '\u2014') +
+      '</b><span>' + esc(v(m, M.TIPO)) + ' &middot; ' + esc(v(m, M.DATA)) + ' ' +
+      esc(v(m, M.ORA)) + '</span></span><span class="chip ' + classeEsito(v(m, M.ESITO)) +
+      '">' + esc(v(m, M.ESITO) || '\u2014') + '</span></div>';
+  }).join('') + '</div>' +
+  (vis.length > mostra.length ? '<div class="azioni"><button class="btn" type="button" id="piu">' +
+    'Mostra tutti (' + vis.length + ')</button></div>' : '');
+  var p = $('#piu');
+  if(p) p.addEventListener('click', function(){ tuttiMsg = true; disegnaMessaggi(); });
+}
+
+/* ---------- STATISTICHE ----------
+   A cosa serve questa pagina: il PT deve vedere in dieci secondi quanto ha
+   lavorato, quanto ne ha regalato e come sta andando rispetto ai mesi
+   prima. Non e un pannello per noi: e il suo registro.
+
+   IL CONTRATTO, ed e una chiave sola dentro i dati - oppure la rotta
+   /s/<slug>, che la pagina chiede da sola se la chiave non c e:
+
+   statistiche: {
+     aggiornato: "9 settembre 2026",
+     valuta: "\u20ac",                 facoltativa
+     mesi: [                          dal piu VECCHIO al piu RECENTE
+       { etichetta:      "set 2026",  OBBLIGATORIA
+         lezioni_fatte:   170,
+         lezioni_paganti: 155,
+         lezioni_prova:    15,        le prove: non le conto a nessuno
+         disdette:          6,
+         clienti_paganti:  21,
+         clienti_prova:     4,
+         nuovi_clienti:     3,
+         clienti_persi:     1,
+         incasso_stimato: 2480 }      solo se i prezzi ci sono
+     ]
+   }
+
+   TRE REGOLE, e sono il motivo per cui questa pagina non mente:
+   1. ogni voce dentro il mese e FACOLTATIVA. Quello che non arriva non si
+      disegna: niente zeri inventati, niente colonne vuote.
+   2. l ULTIMO mese e quello in corso e NON entra nelle medie. Un mese a
+      meta abbassa la media e sembra un calo che non c e.
+   3. i totali e le medie li fa la pagina sui mesi che ha, e scrive su
+      quanti. Non chiede a nessuno di calcolarli due volte. */
+var periodo = 'lezioni_fatte', STAT = null;
+var VALUTA = '\u20ac';
+function nMese(m, k){ var x = m[k]; return (x === undefined || x === null || x === '') ? null : Number(x); }
+function haVoce(mesi, k){
+  for(var i = 0; i < mesi.length; i++) if(nMese(mesi[i], k) !== null) return true;
+  return false;
+}
+function soldi(x){ return VALUTA + ' ' + Math.round(Number(x) || 0).toLocaleString('it-IT'); }
+function schedaNum(valore, etichetta, sotto, classe){
+  return '<div class="sc' + (classe ? ' ' + classe : '') + '"><div class="n num">' + esc(valore) +
+    '</div><div class="e">' + esc(etichetta) + '</div>' +
+    (sotto ? '<div class="d">' + esc(sotto) + '</div>' : '') + '</div>';
+}
+function disegnaStat(){
+  reso.stat = 1;
+  var el = $('#l-stat'), h = '', mesi = (STAT && Array.isArray(STAT.mesi)) ? STAT.mesi : [];
+  if(STAT && STAT.valuta) VALUTA = STAT.valuta;
+
+  /* le pillole: una per ogni misura che i dati contengono davvero */
+  var MISURE = [['lezioni_fatte','Lezioni'],['clienti_paganti','Clienti'],
+                ['incasso_stimato','Incasso']];
+  var disp = MISURE.filter(function(x){ return haVoce(mesi, x[0]); });
+  if(!disp.length || disp.map(function(x){ return x[0]; }).indexOf(periodo) === -1)
+    periodo = disp.length ? disp[0][0] : 'lezioni_fatte';
+  $('#p-stat').innerHTML = disp.length < 2 ? '' : disp.map(function(x){
+    return '<button class="pill" type="button" data-fs="' + x[0] + '" aria-pressed="' +
+      (x[0] === periodo) + '">' + x[1] + '</button>'; }).join('');
+
+  if(!mesi.length){
+    h = vuoto('Il primo mese arriva a fine mese',
+      'Da qui in avanti tengo il conto di ogni lezione fatta, di quelle di prova e di quanti clienti paganti hai. Il primo riepilogo lo vedi il primo del mese prossimo.');
+  } else {
+    var ora = mesi[mesi.length - 1];
+    var chiusi = mesi.slice(0, -1);            /* il mese in corso resta fuori */
+    /* --- il mese in corso --- */
+    var c = [];
+    if(nMese(ora,'lezioni_fatte')   !== null) c.push(schedaNum(ora.lezioni_fatte, 'lezioni fatte'));
+    if(nMese(ora,'lezioni_paganti') !== null) c.push(schedaNum(ora.lezioni_paganti, 'di cui pagate'));
+    if(nMese(ora,'lezioni_prova')   !== null) c.push(schedaNum(ora.lezioni_prova, 'prove regalate'));
+    if(nMese(ora,'clienti_paganti') !== null) c.push(schedaNum(ora.clienti_paganti, 'clienti paganti'));
+    if(nMese(ora,'nuovi_clienti')   !== null) c.push(schedaNum(ora.nuovi_clienti, 'clienti nuovi'));
+    if(nMese(ora,'disdette')        !== null) c.push(schedaNum(ora.disdette, 'disdette', '', 'crit'));
+    if(nMese(ora,'incasso_stimato') !== null) c.push(schedaNum(soldi(ora.incasso_stimato), 'incasso stimato'));
+    h += '<div class="tit">' + esc(ora.etichetta || 'questo mese') +
+         ' <span class="c">mese in corso</span></div><div class="stat">' + c.join('') + '</div>';
+
+    /* --- l andamento, sulla misura scelta --- */
+    var s = mesi.slice(-12).filter(function(m){ return nMese(m, periodo) !== null; });
+    if(s.length > 1){
+      var max = Math.max.apply(null, s.map(function(m){ return nMese(m, periodo) || 0; })) || 1;
+      h += '<div class="tit">Andamento</div><div class="box"><div class="grafico">' +
+        s.map(function(m, i){
+          var val = nMese(m, periodo) || 0;
+          return '<div class="' + (i === s.length - 1 ? 'ora' : '') + '" style="height:' +
+            Math.max(Math.round(val / max * 100), 3) + '%" title="' + esc(m.etichetta) + ': ' +
+            esc(val) + '"></div>'; }).join('') +
+        '</div><div class="gx">' + s.map(function(m){
+          return '<span>' + esc(String(m.etichetta).split(' ')[0]) + '</span>'; }).join('') +
+        '</div></div>';
+    }
+
+    /* --- in media al mese, sui mesi CHIUSI --- */
+    if(chiusi.length){
+      var media = function(k){
+        var v = chiusi.map(function(m){ return nMese(m, k); }).filter(function(x){ return x !== null; });
+        if(!v.length) return null;
+        return v.reduce(function(a, b){ return a + b; }, 0) / v.length;
+      };
+      var somma = function(k){
+        var v = mesi.map(function(m){ return nMese(m, k); }).filter(function(x){ return x !== null; });
+        if(!v.length) return null;
+        return v.reduce(function(a, b){ return a + b; }, 0);
+      };
+      var mL = media('lezioni_fatte'), mI = media('incasso_stimato'),
+          mP = media('lezioni_prova'), tL = somma('lezioni_fatte'), tP = somma('lezioni_prova');
+      var m = [];
+      if(mL !== null) m.push(schedaNum(Math.round(mL), 'lezioni al mese'));
+      if(mI !== null) m.push(schedaNum(soldi(mI), 'incasso al mese'));
+      if(mP !== null) m.push(schedaNum(Math.round(mP * 10) / 10, 'prove al mese'));
+      if(tL !== null) m.push(schedaNum(tL, 'lezioni in tutto'));
+      if(tP !== null) m.push(schedaNum(tP, 'prove regalate in tutto'));
+      if(m.length){
+        h += '<div class="tit">Da quando siamo insieme</div><div class="stat">' + m.join('') + '</div>' +
+          '<div class="nota">La media \u00e8 sui ' + chiusi.length + ' ' +
+          (chiusi.length === 1 ? 'mese chiuso' : 'mesi chiusi') +
+          ': il mese in corso non entra nel conto finché non finisce.' +
+          (mI !== null ? ' L\'incasso è una <b>stima</b> sui prezzi che mi hai dato.' : '') +
+          '</div>';
+      }
+    }
+
+    /* --- mese per mese --- */
+    var col = [['lezioni_fatte','Lezioni'],['lezioni_prova','Prove'],
+               ['clienti_paganti','Clienti'],['incasso_stimato','Incasso']]
+              .filter(function(x){ return haVoce(mesi, x[0]); });
+    h += '<div class="tit">Mese per mese</div><div class="box"><table class="mesi"><thead><tr><th>Mese</th>' +
+      col.map(function(x){ return '<th>' + x[1] + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      mesi.slice().reverse().map(function(m){
+        return '<tr><td>' + esc(m.etichetta) + '</td>' + col.map(function(x){
+          var val = nMese(m, x[0]);
+          if(val === null) return '<td class="pic">&mdash;</td>';
+          if(x[0] === 'incasso_stimato') return '<td class="num">' + esc(soldi(val)) + '</td>';
+          if(x[0] === 'lezioni_fatte' && nMese(m,'lezioni_paganti') !== null)
+            return '<td class="num">' + esc(val) + ' <span class="pic">(' +
+              esc(m.lezioni_paganti) + ' pag.)</span></td>';
+          return '<td class="num">' + esc(val) + '</td>';
+        }).join('') + '</tr>';
+      }).join('') + '</tbody></table></div>';
+  }
+
+  /* --- quello che la pagina sa gia da sola, sempre, anche senza storia --- */
+  var perPaga = {};
+  CLI.forEach(function(c){ if(!attivo(c)) return;
+    var k = (v(c, C.PAGA) || 'non indicato').replace(/\s*\(.*\)\s*$/, ''); perPaga[k] = (perPaga[k] || 0) + 1; });
+  h += '<div class="tit">Adesso, dai dati di stasera</div><div class="stat">' +
+    schedaNum(attiviN, 'clienti attivi') +
+    schedaNum(rinnN, 'pacchetti agli sgoccioli', '', rinnN ? 'crit' : '') +
+    schedaNum(consN, 'senza consenso', '', consN ? 'male' : '') +
+    Object.keys(perPaga).map(function(k){
+      return schedaNum(perPaga[k], k.toLowerCase()); }).join('') + '</div>';
+  if(STAT && STAT.aggiornato)
+    h += '<div class="nota">Numeri aggiornati al ' + esc(STAT.aggiornato) + '.</div>';
+  el.innerHTML = h;
+}
+function caricaStat(){
+  if(D.statistiche){ STAT = D.statistiche; disegnaStat(); return; }
+  if(!window.ZP_SLUG || typeof fetch !== 'function'){ disegnaStat(); return; }
+  fetch('/s/' + window.ZP_SLUG, { credentials:'omit' })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){ if(j) STAT = j; disegnaStat(); })
+    .catch(function(){ disegnaStat(); });
+}
+
+/* ---------- PROFILO ----------
+   La pagina NON conosce i campi: CR manda coppie etichetta/valore nell ordine
+   che vuole, e una riga con un solo elemento e un titolo di sezione. Cosi
+   un impostazione nuova non fa toccare il guscio.
+   Qui dentro va SOLO quello che il PT ha scritto: slug, phone_number_id,
+   sheet_id e stato del pagamento sono roba nostra. Lo decide CR. */
+(function(){
+  var P = D.profilo || [];
+  if(!Array.isArray(P) || !P.length) return;
+  var h = '', aperto = false;
+  P.forEach(function(r){
+    if(!Array.isArray(r) || !r.length) return;
+    var et = v(r, 0), val = v(r, 1);
+    if(r.length < 2){
+      if(aperto) h += '</div>';
+      h += '<div class="tit">' + esc(et) + '</div><div class="gl">'; aperto = true; return;
+    }
+    if(!aperto){ h += '<div class="gl">'; aperto = true; }
+    h += '<div class="gr solo"><div><b>' + esc(et) + '</b><span class="' +
+      (val ? '' : 'spenta') + '">' + esc(val || 'non me l\u2019hai ancora detto') +
+      '</span></div></div>';
+  });
+  if(aperto) h += '</div>';
+  $('#l-profilo').innerHTML = h;
+  $('#tit-profilo').hidden = false;
+})();
+
+/* ---------- installala come app ----------
+   La pagina ha gia manifest e service worker: su Android Chrome propone
+   l installazione da solo (beforeinstallprompt), su iPhone no - li serve dire
+   dove toccare. Il foglio compare la prima volta che la pagina e aperta dal
+   browser di un telefono, non dall app installata, e non piu di tre volte
+   finche il PT non tocca Fatto. Dalla guida si riapre quando si vuole. */
+var installaEvento = null;
+window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); installaEvento = e; });
+function inApp(){
+  try{ if(navigator.standalone === true) return true;
+    return !!(window.matchMedia && window.matchMedia('(display-mode: standalone)').matches); }
+  catch(e){ return false; }
+}
+function icoCondividi(){ return '<svg viewBox="0 0 24 24"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M5 11v9h14v-9"/></svg>'; }
+function icoPunti(){ return '<svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="19" r="1.4"/></svg>'; }
+function icoPiu(){ return '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></svg>'; }
+function apriInstalla(forzato){
+  var ua = navigator.userAgent || '';
+  var iOS = /iPhone|iPad|iPod/.test(ua), android = /Android/.test(ua);
+  /* ?os=ios / ?os=android: per guardare il foglio da computer (demo, screenshot) */
+  var os = (String(location.search).match(/[?&]os=(ios|android)/) || [])[1];
+  if(os){ iOS = os === 'ios'; android = os === 'android'; }
+  var passi;
+  if(iOS){
+    passi = '<li><span>Tocca <b>Condividi</b> ' + icoCondividi() + ' in basso (in Safari) o in alto a destra (in Chrome)</span></li>' +
+      '<li><span>Scorri e tocca <b>Aggiungi alla schermata Home</b> ' + icoPiu() + '</span></li>' +
+      '<li><span>Tocca <b>Aggiungi</b> in alto a destra: l\u2019icona compare fra le tue app</span></li>';
+  } else if(android){
+    passi = '<li><span>Tocca i <b>tre puntini</b> ' + icoPunti() + ' in alto a destra di Chrome</span></li>' +
+      '<li><span>Tocca <b>Aggiungi a schermata Home</b> oppure <b>Installa app</b></span></li>' +
+      '<li><span>Conferma: l\u2019icona compare fra le tue app</span></li>';
+  } else {
+    passi = '<li><span>Da computer: nella barra dell\u2019indirizzo di Chrome tocca l\u2019icona <b>Installa</b> ' + icoPiu() + ', oppure il menu e poi <b>Installa Zenit</b></span></li>' +
+      '<li><span>Dal telefono: apri questo stesso link e ti mostro dove toccare</span></li>';
+  }
+  var h = '<div class="velo" id="velo"><div class="foglio" role="dialog" aria-modal="true" aria-labelledby="f-tit">' +
+    '<h3 id="f-tit">Tienilo sul telefono come una app</h3>' +
+    '<div class="sotto">Un tocco e si apre, senza cercare il link. Si aggiorna da solo ogni sera.</div>' +
+    '<ol>' + passi + '</ol><div class="azioni">' +
+    (installaEvento ? '<button class="btn pri" type="button" id="i-ora">Installa adesso</button>' : '') +
+    '<button class="btn' + (installaEvento ? '' : ' pri') + '" type="button" id="i-fatto">Fatto</button>' +
+    '<button class="btn" type="button" id="i-dopo">Pi\u00f9 tardi</button></div></div></div>';
+  var w = document.createElement('div'); w.innerHTML = h; document.body.appendChild(w.firstChild);
+  var chiudi = function(quante){
+    try{ localStorage.setItem('zp-installa', String(quante)); }catch(e){}
+    var vv = $('#velo'); if(vv) vv.parentNode.removeChild(vv);
+  };
+  $('#i-fatto').addEventListener('click', function(){ chiudi(99); });
+  $('#i-dopo').addEventListener('click', function(){
+    var n = 0; try{ n = parseInt(localStorage.getItem('zp-installa') || '0', 10) || 0; }catch(e){}
+    chiudi(forzato ? n : n + 1);
+  });
+  var ora = $('#i-ora');
+  if(ora) ora.addEventListener('click', function(){
+    var ev = installaEvento; installaEvento = null;
+    if(!ev){ chiudi(99); return; }
+    ev.prompt();
+    if(ev.userChoice) ev.userChoice.then(function(){ chiudi(99); }, function(){ chiudi(99); });
+    else chiudi(99);
+  });
+  $('#velo').addEventListener('click', function(e){ if(e.target === e.currentTarget) $('#i-dopo').click(); });
+}
+$('#b-installa').addEventListener('click', function(){ apriInstalla(true); });
+(function(){
+  if(inApp() || senzaDati) return;
+  var ua = navigator.userAgent || '';
+  if(!/iPhone|iPad|iPod|Android/.test(ua)) return;
+  var n = 0; try{ n = parseInt(localStorage.getItem('zp-installa') || '0', 10) || 0; }catch(e){}
+  if(n >= 3) return;
+  setTimeout(function(){ if(!$('#velo')) apriInstalla(false); }, 1500);
+})();
+
+/* ---------- navigazione ---------- */
+var SEZ = ['oggi','clienti','messaggi','stat','soldi','altro'];
+var reso = {};
+function assicura(nome){
+  if(reso[nome]) return;
+  reso[nome] = 1;
+  if(nome === 'clienti')       disegnaClienti();
+  else if(nome === 'messaggi') disegnaMessaggi();
+  else if(nome === 'stat')     caricaStat();
+  else if(nome === 'soldi')    disegnaSoldi();
+}
+function vai(nome){
+  if(SEZ.indexOf(nome) === -1) nome = 'oggi';
+  assicura(nome);
+  SEZ.forEach(function(k){ $('#s-' + k).hidden = (k !== nome); });
+  Array.prototype.forEach.call(document.querySelectorAll('.barra button'), function(b){
+    b.setAttribute('aria-selected', String(b.getAttribute('data-t') === nome));
+  });
+  try{ window.scrollTo(0, 0); }catch(e){}
+}
+function aggiornaPill(){
+  Array.prototype.forEach.call(document.querySelectorAll('[data-fc]'), function(p){
+    p.setAttribute('aria-pressed', String(p.getAttribute('data-fc') === fCli)); });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-fm]'), function(p){
+    p.setAttribute('aria-pressed', String(p.getAttribute('data-fm') === fMsg)); });
+}
+Array.prototype.forEach.call(document.querySelectorAll('.barra button'), function(b){
+  b.addEventListener('click', function(){
+    var n = b.getAttribute('data-t');
+    try{ history.replaceState(null, '', '#' + n); }catch(e){}
+    vai(n);
+  });
+});
+$('#b-guida').addEventListener('click', function(){
+  try{ history.replaceState(null, '', '#altro'); }catch(e){}
+  vai('altro');
+});
+$('#p-soldi').addEventListener('click', function(e){
+  var b = e.target.closest('[data-fs]'); if(!b) return;
+  fSoldi = b.getAttribute('data-fs');
+  Array.prototype.forEach.call(document.querySelectorAll('[data-fs]'), function(p){
+    p.setAttribute('aria-pressed', String(p.getAttribute('data-fs') === fSoldi)); });
+  disegnaSoldi();
+});
+$('#t-oggi').addEventListener('click', function(e){
+  var b = e.target.closest('.tes'); if(!b) return;
+  Array.prototype.forEach.call(document.querySelectorAll('.tes'), function(x){
+    x.setAttribute('aria-pressed', 'false'); });
+  b.setAttribute('aria-pressed', 'true');
+  var f = b.getAttribute('data-f');
+  if(f === '__msg'){ fMsg = 'problemi'; aggiornaPill(); disegnaMessaggi(); vai('messaggi'); }
+  else { fCli = f; aggiornaPill(); disegnaClienti(); vai('clienti'); }
+});
+$('#p-clienti').addEventListener('click', function(e){
+  var b = e.target.closest('[data-fc]'); if(!b) return;
+  fCli = b.getAttribute('data-fc'); aggiornaPill(); disegnaClienti();
+});
+$('#p-msg').addEventListener('click', function(e){
+  var b = e.target.closest('[data-fm]'); if(!b) return;
+  fMsg = b.getAttribute('data-fm'); tuttiMsg = false; aggiornaPill(); disegnaMessaggi();
+});
+$('#p-stat').addEventListener('click', function(e){
+  var b = e.target.closest('[data-fs]'); if(!b) return;
+  periodo = b.getAttribute('data-fs');
+  Array.prototype.forEach.call(document.querySelectorAll('[data-fs]'), function(p){
+    p.setAttribute('aria-pressed', String(p.getAttribute('data-fs') === periodo)); });
+  disegnaStat();
+});
+$('#qf').addEventListener('input', function(e){ qFare = e.target.value.trim().toLowerCase(); disegnaFare(); });
+$('#q').addEventListener('input',  function(e){ qCli  = e.target.value.trim().toLowerCase(); disegnaClienti(); });
+$('#qm').addEventListener('input', function(e){ qMsg  = e.target.value.trim().toLowerCase(); disegnaMessaggi(); });
+$('#ord').addEventListener('change', function(e){ ordCli = e.target.value; disegnaClienti(); });
+
+document.addEventListener('click', function(e){
+  if(!e.target || !e.target.closest) return;
+  var cp = e.target.closest('[data-copia]');
+  if(cp){
+    var s = cp.getAttribute('data-copia'), vecchio = cp.innerHTML;
+    var fine = function(){ cp.innerHTML = ico() + 'Copiato';
+      setTimeout(function(){ cp.innerHTML = vecchio; }, 1400); };
+    if(navigator.clipboard) navigator.clipboard.writeText(s).then(fine, fine); else fine();
+    return;
+  }
+  var salto = e.target.closest('[data-vai]');
+  if(salto){
+    var i = salto.getAttribute('data-vai');
+    fCli = 'tutti'; qCli = ''; $('#q').value = '';
+    aggiornaPill(); disegnaClienti(); vai('clienti');
+    var r = document.querySelector('[data-ap="c' + i + '"]'),
+        d = document.getElementById('c' + i);
+    if(r && d){ r.setAttribute('aria-expanded', 'true'); d.hidden = false;
+      if(r.scrollIntoView) r.scrollIntoView({ behavior:'smooth', block:'center' }); }
+    return;
+  }
+  /* una riga aperta per volta dentro lo stesso riquadro: la pagina resta corta */
+  var b = e.target.closest('[data-ap]'); if(!b) return;
+  var det = document.getElementById(b.getAttribute('data-ap')); if(!det) return;
+  var era = b.getAttribute('aria-expanded') === 'true';
+  var box = b.closest('.box');
+  if(box) Array.prototype.forEach.call(box.querySelectorAll('[data-ap]'), function(x){
+    x.setAttribute('aria-expanded', 'false');
+    var y = document.getElementById(x.getAttribute('data-ap')); if(y) y.hidden = true;
+  });
+  b.setAttribute('aria-expanded', String(!era));
+  det.hidden = era;
+});
+
+/* La sezione sta nell indirizzo: #clienti #stat #altro. Serve a tre cose -
+   l app installata riapre dove serve, il tasto Indietro di Android torna al
+   cruscotto invece di uscire, e un link si puo mandare. */
+function daHash(){
+  var p = String(location.hash || '').replace(/^#/, '').split('/');
+  if(p[0] === 'clienti' && p[1]){ fCli = p[1]; aggiornaPill(); disegnaClienti(); }
+  if(p[0] === 'messaggi' && p[1]){ fMsg = p[1]; aggiornaPill(); disegnaMessaggi(); }
+  vai(p[0] || 'oggi');
+}
+window.addEventListener('hashchange', daHash);
+
+disegnaFare(); daHash();
+})();
+</script>
+</body>
+</html>

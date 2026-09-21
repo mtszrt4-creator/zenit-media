@@ -877,6 +877,13 @@ function senzaProssima(c){ return v(c, C.PROX) === ''; }
 function feedbackBasso(c){ var m = v(c, C.FB).match(/\d+/); return !!m && parseInt(m[0], 10) === 1; }
 function attivo(c){ var s = v(c, C.STATO).toUpperCase();
   return s === '' || s === 'ATTIVO' || s === 'FERIE'; }
+/* v11: il tetto clienti di ogni piano (20_LISTINO §1b: 25 / 50 / illimitato). Infinity = nessun tetto. */
+var TETTI = { BASE:25, COMPLETO:50, PRO:Infinity };
+function tettoDi(pt){ var m = parseInt(pt && pt.max_clienti, 10); if(m > 0) return m;
+  var k = String((pt && pt.piano) || 'BASE').toUpperCase(); return TETTI[k] === undefined ? 25 : TETTI[k]; }
+function tettoTesto(n){ return n === Infinity ? 'clienti illimitati' : 'fino a ' + n + ' clienti'; }
+/* chi occupa un posto: tutti tranne i CHIUSO, la stessa regola di E/ROUTER e di CR */
+function occupaPosto(c){ return v(c, C.STATO).toUpperCase() !== 'CHIUSO'; }
 function nomeIntero(c){ return (v(c, C.NOME) + ' ' + v(c, C.COGN)).trim() || 'Senza nome'; }
 
 function segnale(c){
@@ -910,8 +917,10 @@ $('#h-ora').textContent  = t(pt.aggiornato);
   el.hidden = false;
 })();
 if(t(pt.piano)){
-  var tetto = parseInt(pt.max_clienti, 10);
-  $('#h-piano').textContent = t(pt.piano) + (tetto > 0 ? ' \u00b7 ' + attiviN + '/' + tetto : '');
+  /* v11: sempre, non solo con max_clienti: il PT vede quanto manca al tetto del suo piano */
+  var tetto = tettoDi(pt), postiN = CLI.filter(occupaPosto).length;
+  $('#h-piano').textContent = t(pt.piano) + ' \u00b7 ' + postiN + (tetto === Infinity ? ' clienti' : ' su ' + tetto + ' clienti');
+  $('#h-piano').title = tetto === Infinity ? 'Il tuo piano non ha un tetto di clienti' : 'Clienti che occupano un posto sul tuo piano (tutti tranne i chiusi): ne restano ' + Math.max(0, tetto - postiN);
   $('#h-piano').hidden = false;
 }
 (function(){
@@ -1406,6 +1415,7 @@ function disegnaAuto(){
     }).join('');
     var quante = AUTOM.filter(function(a){ return a.p === p; }).length;
     var testa = '<div class="tit piano-t">Piano ' + NOMI[p] +
+      ' <span class="fuori" style="font-weight:500">\u00b7 ' + tettoTesto(TETTI[p]) + '</span>' +
       (p === pianoPT ? ' <span class="mio">il tuo piano</span>' : '') +
       (nel ? ' <span class="c">' + attiveP + ' di ' + quante + ' attive</span>'
            : ' <span class="fuori">' + quante + ' funzioni in pi\u00f9, non nel tuo piano</span>') + '</div>';

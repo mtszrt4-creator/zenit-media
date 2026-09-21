@@ -1916,7 +1916,11 @@ function applicaStato(st){
         return (p.cliente_id && x.cliente_id && String(x.cliente_id) === String(p.cliente_id)) ||
                (p.telefono && x.telefono && telPulito(x.telefono) === telPulito(p.telefono)); })[0];
       if(!cli) return;
-      var r = (cli.righe || []).filter(function(y){ return Number(y.n) === Number(p.numero_rata); })[0];
+      /* v12: con un acconto due righe hanno lo stesso numero (la rata aperta col residuo e
+         l'acconto PAGATA): si prende quella con lo stesso stato, poi quella aperta, poi la prima */
+      var cand = (cli.righe || []).filter(function(y){ return Number(y.n) === Number(p.numero_rata); });
+      var r = cand.filter(function(y){ return y.stato === p.stato; })[0] ||
+              cand.filter(function(y){ return y.stato !== 'PAGATA'; })[0] || cand[0];
       if(!r) return;
       if(r.stato !== p.stato || (p.data_pagamento && r.pagata_il !== p.data_pagamento)){
         r.stato = p.stato; if(p.data_pagamento) r.pagata_il = p.data_pagamento; toccato = true;

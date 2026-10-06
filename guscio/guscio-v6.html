@@ -567,6 +567,12 @@ html[data-tema="chiaro"] .gr:nth-child(even){background:rgba(0,0,0,.025)}
         I mesi contano dal suo primo giorno con te. Passo da solo alla fase nuova: inviti a prenotare
         e conteggi seguono il ritmo giusto, e la settimana prima del cambio te lo scrivo in
         <b>Da fare</b>. Vuoto = vale sempre il numero di <b>Sessioni a settimana</b>.</span></div></div>
+      <div class="gr solo"><div><b>Fissa tutte le lezioni in un colpo</b>
+        <span>Se ha gli orari fissi, scrivi al tuo assistente <code>FISSA Marco Rossi</code>, oppure tocca
+        <b>FISSA</b> nella scheda del cliente o in <b>Da fare</b>. Ti mando le date e con
+        <b>S&igrave;, fissale</b> le segno tutte nel calendario, una per una. Le date occupate o festive
+        le salto e te le elenco, quelle gi&agrave; segnate non le tocco. Anche il cliente pu&ograve;
+        scrivere &laquo;fissa le mie lezioni&raquo;: gli propongo solo i suoi orari fissi e ti avviso.</span></div></div>
       <div class="gr solo"><div><b>Giorni preferiti</b>
         <span>Nella scheda spunti tutti i giorni che preferisce, anche pi&ugrave; di uno.
         Se hai scritto gli orari fissi puoi lasciarlo vuoto.</span></div></div>
@@ -729,6 +735,7 @@ html[data-tema="chiaro"] .gr:nth-child(even){background:rgba(0,0,0,.025)}
       <div class="gr solo"><div><b><code>CAMBIA</code> numero</b><span>Cambia come paga: pacchetto, abbonamento, percorso, a consumo.</span></div></div>
       <div class="gr solo"><div><b><code>DATI</code> numero</b><span>Cambia i suoi dati: telefono, con chi si allena, obiettivo, come lo chiami sul calendario. Valgono anche <code>ALIAS</code> e <code>OBIETTIVO</code>. Da qui dai anche il consenso ai messaggi: &egrave; la prima riga.</span></div></div>
       <div class="gr solo"><div><b><code>FERIE</code> numero</b><span>Lo metti in pausa: ferie o pausa sua.</span></div></div>
+      <div class="gr solo"><div><b><code>FISSA</code> numero o nome</b><span>Segna in calendario tutte le lezioni che restano, nei suoi orari fissi. Prima ti mostro le date e aspetto il tuo <b>S&igrave;, fissale</b>.</span></div></div>
       <div class="gr solo"><div><b><code>SOSPENDI</code> numero</b><span>Si ferma ma resta tuo cliente. Da qui lo fai anche <b>ripartire</b>.</span></div></div>
       <div class="gr solo"><div><b><code>CHIUDI</code> numero</b><span>Non &egrave; pi&ugrave; tuo cliente. Libera un posto.</span></div></div>
     </div>
@@ -863,6 +870,7 @@ var VIVE = { MENU:1, MALATTIA:1, CHIUDO:1, RIENTRO:1, RIPRENDI:1, PAUSA:1,
 VIVE.PAGATO = 1; VIVE.SOLDI = 1; VIVE.RATE = 1;   /* 20/09: i soldi */
 VIVE.SPEGNI = 1; VIVE.ACCENDI = 1;               /* 20/09: le automazioni */
 VIVE.AGGIORNA = 1;                                /* 20/09 sera: rifai il cruscotto adesso */
+VIVE.FISSA = 1;                                   /* 06/10: fissa tutte le lezioni (E Intercetta FISSA -> FX) */
 function viva(cmd){
   return VIVE[(t(cmd).split(/\s+/)[0] || '').toUpperCase()] === 1;
 }
@@ -1225,7 +1233,7 @@ function scheda(c){
        DATI cambia numero coppia obiettivo e alias, e la riattivazione sta
        dentro la schermata che apre SOSPENDI. */
     var lista = ['GESTISCI ' + tl, 'PAGATO ' + tl, 'LEZIONI ' + tl, 'RINNOVA ' + tl, 'CAMBIA ' + tl,
-                 'PROROGA ' + tl, 'DATI ' + tl, 'FERIE ' + tl];
+                 'PROROGA ' + tl, 'DATI ' + tl, 'FERIE ' + tl, 'FISSA ' + tl];
     if(senzaConsenso(c)){ var iD = lista.indexOf('DATI ' + tl); if(iD > -1) lista.splice(iD, 1); lista.unshift('DATI ' + tl); }
     lista.push('SOSPENDI ' + tl);
     lista.push('CHIUDI ' + tl);

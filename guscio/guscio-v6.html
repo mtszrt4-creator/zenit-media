@@ -573,12 +573,31 @@ html[data-tema="chiaro"] .gr:nth-child(even){background:rgba(0,0,0,.025)}
         <b>S&igrave;, fissale</b> le segno tutte nel calendario, una per una. Le date occupate o festive
         le salto e te le elenco, quelle gi&agrave; segnate non le tocco. Anche il cliente pu&ograve;
         scrivere &laquo;fissa le mie lezioni&raquo;: gli propongo solo i suoi orari fissi e ti avviso.</span></div></div>
-      <div class="gr solo"><div><b>Giorni preferiti</b>
-        <span>Nella scheda spunti tutti i giorni che preferisce, anche pi&ugrave; di uno.
-        Se hai scritto gli orari fissi puoi lasciarlo vuoto.</span></div></div>
+      <div class="gr solo"><div><b>Giorni e fasce preferite</b>
+        <span>Nella scheda spunti tutti i giorni che preferisce, anche pi&ugrave; di uno, e allo
+        stesso modo le fasce (mattina fino alle 12, pranzo 12-15, pomeriggio 15-19, sera dalle 19).
+        Quando gli propongo orari per spostare o prenotare, a parit&agrave; di comodit&agrave; per te
+        scelgo prima i suoi giorni e le sue fasce. Se hai scritto gli orari fissi puoi lasciare vuoti i giorni.</span></div></div>
       <div class="gr solo"><div><b>Se scrivi qualcosa che non capisco</b>
         <span>Il cliente entra lo stesso e conto le sessioni a settimana di sempre;
         in <b>Da fare</b> ti dico cosa correggere.</span></div></div>
+    </div>
+
+    <button class="apri" type="button" aria-expanded="false" data-ap="g-checkin">
+      <b>Il check-in del luned&igrave;</b><span class="frec">&rsaquo;</span></button>
+    <div class="gl" id="g-checkin" hidden>
+      <div class="gr solo"><div><b>Cos'&egrave;</b>
+        <span>Il luned&igrave; alle 8 mando al cliente, a nome tuo, l'obiettivo della settimana:
+        &laquo;Buon luned&igrave; Marco. L'obiettivo di questa settimana &egrave;: due litri di acqua al giorno.
+        Se ti serve una spinta, [il tuo nome] &egrave; a un messaggio di distanza.&raquo; Solo Completo e PRO.</span></div></div>
+      <div class="gr solo"><div><b>Cosa risponde lui</b>
+        <span>Un tocco: <b>Ci sto</b>, <b>Questa settimana no</b> (riceve il prossimo) o <b>Basta cos&igrave;</b>
+        (non lo riceve pi&ugrave;). Se non tocca niente per 3 volte di fila smetto da solo.</span></div></div>
+      <div class="gr solo"><div><b>Cosa scegli tu, nella scheda clienti</b>
+        <span><b>Focus settimanale</b> = la frase dell'obiettivo (vuoto = ogni volta una diversa, nel
+        tono che hai scelto nel tuo profilo). <b>Check-in ogni</b> = ogni settimana, ogni 2 settimane
+        (anche se lasci vuoto), ogni mese, oppure Mai. Per spegnerlo a tutti: pagina
+        <b>Automazioni</b>, Check-in del luned&igrave;, <b>Spegni</b>.</span></div></div>
     </div>
 
     <button class="apri" type="button" aria-expanded="false" data-ap="g-soldi">
@@ -1232,8 +1251,9 @@ function scheda(c){
        RIATTIVA erano tasti e non sono parole: LEZIONI corregge il conteggio,
        DATI cambia numero coppia obiettivo e alias, e la riattivazione sta
        dentro la schermata che apre SOSPENDI. */
-    var lista = ['GESTISCI ' + tl, 'PAGATO ' + tl, 'LEZIONI ' + tl, 'RINNOVA ' + tl, 'CAMBIA ' + tl,
-                 'PROROGA ' + tl, 'DATI ' + tl, 'FERIE ' + tl, 'FISSA ' + tl];
+    /* 07/10: FISSA subito dopo GESTISCI, in vista (Mattias: «inseriamolo nella scheda di ogni cliente») */
+    var lista = ['GESTISCI ' + tl, 'FISSA ' + tl, 'PAGATO ' + tl, 'LEZIONI ' + tl, 'RINNOVA ' + tl, 'CAMBIA ' + tl,
+                 'PROROGA ' + tl, 'DATI ' + tl, 'FERIE ' + tl];
     if(senzaConsenso(c)){ var iD = lista.indexOf('DATI ' + tl); if(iD > -1) lista.splice(iD, 1); lista.unshift('DATI ' + tl); }
     lista.push('SOSPENDI ' + tl);
     lista.push('CHIUDI ' + tl);
@@ -1411,7 +1431,7 @@ var AUTOM = [
   { k:'settimana',    p:'COMPLETO', n:'Il sabato fisso la settimana',      d:'Il sabato propongo a ognuno gli allenamenti della settimana dopo.' },
   { k:'riattivazione',p:'COMPLETO', n:'Riattivazione a due settimane',     d:'Chi non si allena da due settimane riceve un messaggio per riprendere.' },
   { k:'feedback',     p:'COMPLETO', n:'Feedback dopo la sessione',         d:'Dopo l\'allenamento chiedo com\'\u00e8 andata; se qualcuno non \u00e8 contento te lo dico.' },
-  { k:'checkin',      p:'COMPLETO', n:'Check-in del luned\u00ec',            d:'Il luned\u00ec mando l\'obiettivo della settimana a chi lo vuole.' },
+  { k:'checkin',      p:'COMPLETO', n:'Check-in del luned\u00ec',            d:'Il luned\u00ec alle 8 mando al cliente l\'obiettivo della settimana (la frase la scegli nella scheda, colonna Focus settimanale; ogni quanto, colonna Check-in ogni). Lui risponde Ci sto, Questa settimana no o Basta cos\u00ec.' },
   { k:'buchi',        p:'COMPLETO', n:'Buchi in agenda',                   d:'Se domani hai un buco lo propongo a chi pu\u00f2 riempirlo.' },
   { k:'pagamenti',    p:'COMPLETO', n:'Pagamenti: promemoria e ricevute',  d:'Ricordo le rate tre giorni prima e mando la ricevuta a chi paga.' },
   { k:'slot',         p:'PRO',      n:'Slot liberato, riempito',           d:'Quando si libera un posto lo offro subito a chi lo aspettava.' },

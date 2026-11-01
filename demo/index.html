@@ -1,5 +1,17 @@
-<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Demo ZenitPT</title>
-<style>body{margin:0;background:#0a0a0a;color:#f2f2f2;font-family:Inter,system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:16px;gap:14px}video{width:min(100%,420px);aspect-ratio:9/16;border-radius:16px;background:#000}h1{font-size:1.1rem;margin:0;text-align:center}p{margin:0;color:#9a9a9a;text-align:center;max-width:420px;line-height:1.5}a{color:#00e571}</style></head>
-<body><h1>ZenitPT — la demo, 90 secondi</h1><video src="demo.mp4" controls playsinline preload="metadata"></video>
-<p>Tutto quello che vedi è una demo. L'assistente WhatsApp scrive ai tuoi clienti a nome tuo: tu tocchi solo il calendario.</p>
-<p>Ti va una chiamata di 10 minuti? Rispondi al messaggio su Instagram. — <a href="https://zenitpt.it">zenitpt.it</a></p></body></html>
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a0a0a"><title>Demo di Zenit</title>
+<style>
+body{margin:0;background:#0a0a0a;color:#f2f2f2;font-family:Inter,system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:16px;gap:14px}
+video{width:min(100%,420px);aspect-ratio:9/16;border-radius:16px;background:#000}
+h1{font-size:1.25rem;margin:0;text-align:center}
+p{margin:0;color:#b4b4b4;text-align:center;max-width:420px;line-height:1.5}
+p.nota{font-size:.9rem;color:#9a9a9a}
+.vai{display:flex;flex-direction:column;gap:10px;width:min(100%,420px)}
+.vai a{display:flex;align-items:center;justify-content:center;min-height:48px;padding:0 16px;border-radius:12px;font-weight:700;text-decoration:none;box-sizing:border-box}
+.vai a.primo{background:#00e571;color:#04210f}
+.vai a.secondo{border:2px solid #00e571;color:#00e571}
+.vai a:focus-visible{outline:3px solid #fff;outline-offset:2px}
+</style></head>
+<body><h1>Zenit: la demo in 55 secondi</h1><video src="demo.mp4" controls playsinline preload="metadata"></video>
+<p>Vedi la Panoramica con chi non si allena e chi deve rinnovare, l'agenda, le rate che segni con un tocco e i messaggi su WhatsApp che scrive l'assistente a nome tuo. Le schede di allenamento arrivano nella stessa app.</p>
+<div class="vai"><a class="primo" href="https://zenit-area-prova.zenitpt-business.workers.dev/demo">Provala nell'app</a><a class="secondo" href="https://zenitpt.it">Vai a zenitpt.it</a></div>
+<p class="nota">Clienti e chat della demo sono finti: nessun messaggio parte verso nessuno.</p></body></html>
